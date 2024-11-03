@@ -57,7 +57,7 @@ router.put("/edit/:id", checkLogin, upload.array("files"), asyncHandler(async (r
     const connection = await mysql.createConnection(db.config);
     await connection.execute(str, value);
     await connection.end();
-    res.redirect("/");
+    res.redirect(`/edit/${req.params.id}`);
 }));
 
 router.get("/delete/:id", checkLogin, asyncHandler(async (req, res) => {

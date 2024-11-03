@@ -27,16 +27,19 @@
             <% for(let i = 1; i < indices.length; ++i) { %>
               <td> <input type="text" name="<%= i %>"> </td>
             <% } %>
-            <td> <div id="upload-zone">첨부파일</div> </td>
+            <td> <div id="upload-zone">Drag and Drop</div> </td>
             <td><input type="submit" id="submit-btn" value="등록" class="btn"></td>
           </tr>
+          <tr>
+            <td colspan="<%= indices.length + 1 %>" style="text-align: left;">
+              <div id="fileDropzone" class="dropzone fileList"></div>
+            </td>
+          </tr>
         </tbody>
-        <div id="loading-spinner" class="loading-spinner">파일을 업로드 중입니다...</div>
+        <div id="loading-spinner" class="loading-spinner">파일을 업로드 중입니다... 절대 끄지 마세요</div>
       </form>
     </table>
   </div>
-
-  <div id="fileDropzone" class="dropzone" style="display: none"></div>
 
   <div role="region" aria-label="data table" tabindex="0" class="primary table-wrapper">
     <table>

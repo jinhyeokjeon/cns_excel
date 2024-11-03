@@ -32,16 +32,18 @@
         </td>
         <td>
           <a href="/delete/<%= rowArr[0] %>" class="btn-delete btn" onclick="return confirmDelete();">삭제</a>
-          <!--<form action="/delete/<%= rowArr[0] %>?_method=DELETE" method="POST" onsubmit="return confirmDelete();">
-            <input type="submit" value="삭제" class="btn-delete btn">
-          </form>-->
+        </td>
+      </tr>
+      <tr>
+        <td colspan="<%= indices.length + 1 %>">
+          <div id="fileDropzone" class="dropzone" style="text-align: left;"></div>
         </td>
       </tr>
     </tbody>
   </table>
-  <div id="fileDropzone" class="dropzone"></div>
+  <!--<div id="fileDropzone" class="dropzone"></div>-->
   <input type="submit" id="submit-btn" value="등록" class="btn" style="margin-top: 20px;">
-  <div id="loading-spinner" class="loading-spinner">파일을 업로드 중입니다...</div>
+  <div id="loading-spinner" class="loading-spinner">파일을 업로드 중입니다... 절대 끄지 마세요</div>
 </form>
 
 <script>
@@ -55,7 +57,7 @@
     maxFilesize: 1024, // 최대 파일 크기 (MB)
     addRemoveLinks: true, // 파일 삭제 링크 추가
     dictRemoveFile: "삭제",
-    dictDefaultMessage: "여기로 파일을 드래그 앤 드롭 하세요",
+    dictDefaultMessage: "여기로 추가할 파일을 드래그 앤 드롭 하세요",
     parallelUploads: 10, // 한 번에 여러 파일 처리
     showProgress: false,
   });

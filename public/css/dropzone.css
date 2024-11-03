@@ -235,7 +235,7 @@
   min-height: 50px;
   border: 2px solid rgba(0, 0, 0, .3);
   background: #fff;
-  padding-top: 10px;
+  /*padding-top: 10px;*/
 }
 
 .dropzone.dz-clickable {
@@ -541,7 +541,7 @@
 }
 
 #upload-zone {
-  min-height: 40px;
+  min-height: 35px;
   padding-top: 10px;
   border: 2px solid rgba(0, 0, 0, .3);
   background: #fff;
@@ -556,4 +556,16 @@
 
 .dz-remove:hover {
   cursor: pointer;
+}
+
+.fileList {
+  display: none;
+  background: rgb(236, 235, 234) !important;
+  border: 0 !important;
+  min-height: 5px !important;
+  padding-top: 10px !important;
+}
+
+.dz-progress {
+  display: none !important;
 }
