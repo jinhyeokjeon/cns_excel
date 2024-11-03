@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>cns</title>
+
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- 헤더 : 로고, 상단 메뉴, 로그인 -->
+    <header class="header">
+      <!-- 로고 -->
+      <img src="/img/top_logo_m.png" style="padding-top: 15px; padding-bottom: 5px;">
+    </header>
+
+    <hr style="height: 1.5px; background-color: black">
+
+    <!-- 메인 : 실제 내용이 들어갈 부분 -->
+    <main class="main">
+      <%- body %>
+    </main>
+  </div>
+  <script>
+    if ('<%= loginError %>' == 1) alert("아이디 오류");
+    else if ('<%= loginError %>' == 2) alert("비밀번호 오류");
+  </script>
+</body>
+
+</html>

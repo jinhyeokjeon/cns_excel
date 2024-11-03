@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+
+:root {
+  --black: #1c1c1c;
+  --gray: #7E7E7E;
+  --gray-light: #E4E4E4;
+  --red: #b30000;
+  --font-size-base: 1rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.5rem;
+  --font-size-xl: 2rem;
+  --border-radius: 10px;
+}
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  color: var(--black);
+  font-size: var(--font-size-base);
+  background-color: rgb(236, 235, 234);
+  margin: 0;
+}
+
+a {
+  color: var(--black);
+}
+
+input[type="text"],
+input[type="password"],
+textarea {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 1rem;
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+#password,
+#username {
+  width: 150px;
+}
+
+.btn {
+  background-color: var(--black);
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-decoration: none;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.btn-delete {
+  padding: 10px 16px;
+  background-color: var(--red);
+}
+
+img {
+  width: 100%;
+  height: auto;
+}
+
+/* 레이아웃 */
+.container {
+  margin: 0 auto;
+  padding: 0 10px;
+}
+
+.main {
+  padding: 10px 0;
+}
+
+/* 메인 헤더 */
+.header {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto;
+  grid-template-areas:
+    "logo button"
+    "menu menu";
+  padding: 0;
+}
+
+@media only screen and (min-width: 768px) {
+  .header {
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+      "logo menu button";
+  }
+}
+
+.header-button {
+  width: 100%;
+}
+
+.header-button {
+  display: flex;
+  justify-content: end;
+  grid-area: button;
+}
+
+.admin-post-controls .btn {
+  display: inline-block;
+  background-color: var(--black);
+  color: var(--gray-light);
+  border: 0;
+  text-decoration: none;
+  font-size: .8rem;
+  line-height: 16px;
+}
+
+.column-add {
+  padding: 0;
+  border: none;
+  background-color: rgb(236, 235, 234);
+  min-width: 4rem;
+}

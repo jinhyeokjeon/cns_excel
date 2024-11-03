@@ -1,0 +1,193 @@
+<header class="header">
+  <div style="margin-bottom: 15px;">
+    <a href="/editcol" class="button"> + 열 편집</a>
+  </div>
+  <div class="header-button">
+    <a href="/logout">관리자 로그아웃</a>
+  </div>
+</header>
+
+<main>
+  <div role="region" aria-label="data table" tabindex="0" class="primary table-wrapper">
+    <!-- Note: use the aria-label attribute above to describe this keyboard-focusable region appropriately, per your implementation. Alternatively, it could instead be an aria-labelledby attribute that points to a table caption's ID attribute. Thx for thoughts, @aardrian  -->
+    <table style="margin-bottom: 15px;">
+      <thead>
+        <tr>
+          <% colNames.forEach(col => { %>
+          <th><%= col %></th>
+          <%}); %>
+          <th>첨부파일</th>
+        </tr>
+      </thead>
+
+      <form id="myForm" action="/add" method="POST" enctype="multipart/form-data">
+        <tbody>
+          <tr>
+            <th> <input type="text" name="0"> </th>
+            <% for(let i = 1; i < indices.length; ++i) { %>
+              <td> <input type="text" name="<%= i %>"> </td>
+            <% } %>
+            <td> <div id="upload-zone">첨부파일</div> </td>
+            <td><input type="submit" id="submit-btn" value="등록" class="btn"></td>
+          </tr>
+        </tbody>
+        <div id="loading-spinner" class="loading-spinner">파일을 업로드 중입니다...</div>
+      </form>
+    </table>
+  </div>
+
+  <div id="fileDropzone" class="dropzone" style="display: none"></div>
+
+  <div role="region" aria-label="data table" tabindex="0" class="primary table-wrapper">
+    <table>
+      <tbody>
+        <% for(let i = 0; i < rowsArr.length; ++i) { %>
+        <% const row = rowsArr[i]; %>
+        <tr>
+          <th><%= row[1] %></th>
+          <% for(let j = 2; j < row.length; ++j) {%>
+          <td><%= row[j] %></td>
+          <% } %>
+          <td>
+            <button class="toggle-btn" id="toggle-btn-<%= i %>" onclick="toggleFiles('<%= i %>')">
+              첨부파일(<%= filePaths[i].length %>) &darr;
+            </button>
+            <div id="file-list-<%= i %>" style="display: none">
+              <% for(let j = 0; j < filePaths[i].length; ++j) { %>
+              <div>
+                <a href="<%= filePaths[i][j] %>" download> <%= fileNames[i][j] %> </a>
+              </div>
+              <% } %>
+            </div>
+          </td>
+          <td>
+            <div class="admin-post-controls">
+              <a href="/edit/<%= row[0] %>" class="btn">편집</a>
+            </div>
+          </td>
+        </tr>
+        <% }; %>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<!--첨부파일-->
+<script>
+  function toggleFiles(index) {
+    const fileList = document.getElementById(`file-list-${index}`);
+    const toggleBtn = document.getElementById(`toggle-btn-${index}`);
+
+    if (fileList.style.display === "none") {
+      fileList.style.display = "block";
+      toggleBtn.innerHTML = `첨부파일(${fileList.children.length}) &uarr;`; // 위 화살표
+    } else {
+      fileList.style.display = "none";
+      toggleBtn.innerHTML = `첨부파일(${fileList.children.length}) &darr;`; // 아래 화살표
+    }
+  }
+</script>
+
+<script>
+  const uploadZone = document.getElementById("upload-zone");
+  const myDropzone = new Dropzone("#fileDropzone", {
+    url: "/upload", // 실제 파일 업로드는 여기서 하지 않음
+    autoProcessQueue: false, // 자동으로 서버로 전송하지 않음
+    uploadMultiple: true, // 여러 파일을 한 번에 업로드 가능
+    maxFilesize: 1024, // 최대 파일 크기 (MB)
+    addRemoveLinks: true, // 파일 삭제 링크 추가
+    dictRemoveFile: "삭제",
+    dictDefaultMessage: "여기로 파일을 드래그 앤 드롭 하세요",
+    parallelUploads: 10, // 한 번에 여러 파일 처리
+    showProgress: false,
+    previewTemplate: `
+        <div class="custom-preview">
+            <span class="file-name"></span>
+            <span class="file-size"></span>
+        </div>
+    `,
+    init: function () {
+      // 파일이 추가될 때마다 호출
+      this.on("addedfile", function (file) {
+        // 파일이 추가되면 드롭존 표시
+        document.getElementById("fileDropzone").style.display = "block";
+      });
+
+      // 파일이 제거될 때마다 호출
+      this.on("removedfile", function (file) {
+        if (this.files.length === 0) {
+          // 파일이 없으면 드롭존 숨김
+          document.getElementById("fileDropzone").style.display = "none";
+        }
+      });
+    }
+  });
+
+    // 파일 추가 시 이름과 크기를 표시하도록 설정
+  myDropzone.on("addedfile", function(file) {
+    const previewElement = file.previewElement;
+    previewElement.querySelector(".file-name").textContent = file.name;
+    previewElement.querySelector(".file-size").textContent = `(${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+  });
+
+  const fileInput = document.createElement("input");
+  fileInput.type = "file";
+  fileInput.multiple = true;
+  uploadZone.addEventListener("click", () => {
+    fileInput.click();
+  });
+  fileInput.addEventListener("change", () => {
+  const files = fileInput.files;
+  for (let i = 0; i < files.length; i++)
+    myDropzone.addFile(files[i]);
+  fileInput.value = ""; // 파일 선택 후 input을 초기화
+});
+  uploadZone.addEventListener("mouseover", () => {
+    uploadZone.style.cursor = "pointer";
+  });
+  uploadZone.addEventListener("mouseout", () => {
+    uploadZone.style.cursor = "default";
+  });
+  uploadZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadZone.style.borderColor = 'black';
+  });
+  uploadZone.addEventListener('dragleave', () => {
+    uploadZone.style.borderColor = '#aaa';
+  });
+  uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.style.borderColor = '#aaa';
+    const files = e.dataTransfer.files;
+    for (let i = 0; i < files.length; i++) {
+      myDropzone.addFile(files[i])
+  }
+  });
+  //
+
+  // 폼 제출 시 파일과 데이터를 함께 전송
+  document.getElementById("myForm").addEventListener("submit", function(e) {
+    let check = confirm("등록하시겠습니까?");
+    if (!check) {
+      e.preventDefault();
+      return;
+    }
+
+    document.getElementById("loading-spinner").style.display = "block";
+    document.getElementById("submit-btn").disabled = true;
+
+    // Dropzone의 파일을 폼 데이터에 추가
+    myDropzone.files.forEach((file) => {
+      const dataTransfer = new DataTransfer(); // 데이터 전송 객체 생성
+      dataTransfer.items.add(file); // 파일 추가
+      myDropzone.removeFile(file); // Dropzone에서 파일 제거
+      const fileInput = document.createElement("input");
+      fileInput.type = "file";
+      fileInput.name = "files"; // 파일 배열로 전송
+      fileInput.files = dataTransfer.files; // 파일을 FileList로 설정
+      this.appendChild(fileInput); // 동적으로 폼에 추가
+    });
+
+    this.submit();
+  });
+</script>

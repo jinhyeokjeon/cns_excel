@@ -1,0 +1,70 @@
+header {
+  padding: 10px;
+  padding-bottom: 15px;
+  border-bottom: 3px solid #ddd;
+}
+
+.primary {
+  overflow: auto;
+  scroll-snap-type: both mandatory;
+}
+
+table {
+  border-collapse: collapse;
+  border: 0;
+}
+
+th,
+td {
+  border: 1px solid #aaa;
+  background-clip: padding-box;
+  scroll-snap-align: start;
+}
+
+thead {
+  z-index: 1000;
+  position: relative;
+}
+
+th,
+td {
+  padding: 0.1rem;
+  /*min-width: 6rem;
+  max-width: 10rem;*/
+  width: 8rem;
+  text-align: center;
+  word-break: break-all;
+  margin: 0;
+}
+
+thead th {
+  top: 0;
+  background-clip: padding-box;
+}
+
+tbody th {
+  background-clip: padding-box;
+}
+
+tbody {
+  z-index: 10;
+  position: relative;
+}
+
+tbody th {
+  left: 0;
+}
+
+thead th,
+tbody th {
+  background-color: #f8f8f8;
+}
+
+tbody tr td:last-child {
+  border: 0;
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}

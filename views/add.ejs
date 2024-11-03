@@ -1,0 +1,52 @@
+<a href="/">&larr; 뒤로</a>
+<div class="admin-title">
+  <h2>행 추가</h2>
+</div>
+
+<form action="/add" method="POST" enctype="multipart/form-data" onsubmit="return confirmRegist();">
+  <table style="margin-bottom: 15px;">
+    <thead>
+      <tr>
+        <% colNames.forEach(col => { %>
+        <th><%= col %></th>
+        <%}); %>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <% for(let i = 0; i < indices.length; ++i) { %>
+        <td> <input type="text" name="<%= indices[i] %>"> </td>
+        <% } %>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="form__input--file_wrap">
+    <input class="form__input--file" id="upload2" type="file" name="files" multiple>
+    <label class="form__label--file" for="upload2">파일선택</label>
+    <span class="form__span--file">선택된 파일이 없습니다.</span>
+  </div>
+  <input type="submit" value="등록" class="btn">
+</form>
+
+<script>
+  function confirmRegist() {
+    return confirm("등록하시겠습니까?");
+  }
+  // input file 커스텀 - 파일명 붙이기
+  const fileTarget = document.querySelector('.form__input--file_wrap input');
+
+  fileTarget.addEventListener('change', function() {
+    const files = this.files;
+    const fileArr = [];
+
+    for (let i = 0; i < files.length; i++) {
+      fileArr.push(files[i].name);
+    }
+
+    // 파일명 노출방법2: 배열 값들을 줄바꿈하여 표시
+    const fileList = fileArr.join('<br>');
+    const fileDisplay = this.parentElement.querySelector('.form__span--file');
+    fileDisplay.innerHTML = fileList;
+  });
+</script>
