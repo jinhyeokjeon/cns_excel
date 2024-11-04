@@ -23,11 +23,12 @@
       <form id="myForm" action="/add" method="POST" enctype="multipart/form-data">
         <tbody>
           <tr>
-            <th> <input type="text" name="0"> </th>
-            <% for(let i = 1; i < indices.length; ++i) { %>
-              <td> <input type="text" name="<%= i %>"> </td>
+            <% for(let i = 0; i < indices.length; ++i) { %>
+            <td> <input type="text" name="<%= i %>"> </td>
             <% } %>
-            <td> <div id="upload-zone">Drag and Drop</div> </td>
+            <td>
+              <div id="upload-zone">Drag and Drop</div>
+            </td>
             <td><input type="submit" id="submit-btn" value="등록" class="btn"></td>
           </tr>
           <tr>
@@ -44,11 +45,10 @@
   <div role="region" aria-label="data table" tabindex="0" class="primary table-wrapper">
     <table>
       <tbody>
-        <% for(let i = 0; i < rowsArr.length; ++i) { %>
-        <% const row = rowsArr[i]; %>
+        <% for(let i = 0; i < rows.length; ++i) { %>
+        <% const row = rows[i]; %>
         <tr>
-          <th><%= row[1] %></th>
-          <% for(let j = 2; j < row.length; ++j) {%>
+          <% for(let j = 1; j < row.length; ++j) {%>
           <td><%= row[j] %></td>
           <% } %>
           <td>
@@ -109,15 +109,15 @@
             <span class="file-size"></span>
         </div>
     `,
-    init: function () {
+    init: function() {
       // 파일이 추가될 때마다 호출
-      this.on("addedfile", function (file) {
+      this.on("addedfile", function(file) {
         // 파일이 추가되면 드롭존 표시
         document.getElementById("fileDropzone").style.display = "block";
       });
 
       // 파일이 제거될 때마다 호출
-      this.on("removedfile", function (file) {
+      this.on("removedfile", function(file) {
         if (this.files.length === 0) {
           // 파일이 없으면 드롭존 숨김
           document.getElementById("fileDropzone").style.display = "none";
@@ -126,7 +126,7 @@
     }
   });
 
-    // 파일 추가 시 이름과 크기를 표시하도록 설정
+  // 파일 추가 시 이름과 크기를 표시하도록 설정
   myDropzone.on("addedfile", function(file) {
     const previewElement = file.previewElement;
     previewElement.querySelector(".file-name").textContent = file.name;
@@ -140,11 +140,11 @@
     fileInput.click();
   });
   fileInput.addEventListener("change", () => {
-  const files = fileInput.files;
-  for (let i = 0; i < files.length; i++)
-    myDropzone.addFile(files[i]);
-  fileInput.value = ""; // 파일 선택 후 input을 초기화
-});
+    const files = fileInput.files;
+    for (let i = 0; i < files.length; i++)
+      myDropzone.addFile(files[i]);
+    fileInput.value = ""; // 파일 선택 후 input을 초기화
+  });
   uploadZone.addEventListener("mouseover", () => {
     uploadZone.style.cursor = "pointer";
   });
@@ -164,7 +164,7 @@
     const files = e.dataTransfer.files;
     for (let i = 0; i < files.length; i++) {
       myDropzone.addFile(files[i])
-  }
+    }
   });
   //
 

@@ -4,65 +4,67 @@
 </div>
 
 <div class="table-wrapper">
-<table style="margin-bottom: 15px;">
-  <thead>
-    <tr>
-      <% for(let i = 0; i < colNames.length; ++i){ %>
-      <th>
-        <%= colNames[i] %>
-        <% if(i != 0) { %>
-        <div class="admin-post-controls">
-          <button class="btn" style="padding: 10px" onclick="editColumn('<%= indices[i] %>', '<%= colNames[i] %>')">열 이름 변경</button>
-        </div>
-        <form action="/deletecol/<%= indices[i] %>?_method=DELETE" method="POST" onsubmit="return confirmDelete();">
-          <input type="submit" value="열 삭제" class="btn-delete btn">
-        </form>
-        <% } %>
-      </th>
-      <th class="column-add">
-        <div class="admin-post-controls">
-          <button class="btn" onclick="addColumn('<%= indices[i] %>')">열 추가</button>
-        </div>
-      </th>
-      <% }; %>
-      <th>첨부파일</th>
-    </tr>
-  </thead>
-</table>
+  <table style="margin-bottom: 15px;">
+    <thead>
+      <tr>
+        <th class="column-add">
+          <div class="admin-post-controls">
+            <button class="btn" onclick="addColumn('id')">열 추가</button>
+          </div>
+        </th>
+        <% for(let i = 0; i < colNames.length; ++i){ %>
+        <th>
+          <%= colNames[i] %>
+          <div class="admin-post-controls">
+            <button class="btn" style="padding: 10px" onclick="editColumn('<%= indices[i] %>', '<%= colNames[i] %>')">열 이름 변경</button>
+          </div>
+          <form action="/deletecol/<%= indices[i] %>?_method=DELETE" method="POST" onsubmit="return confirmDelete();">
+            <input type="submit" value="열 삭제" class="btn-delete btn">
+          </form>
+        </th>
+        <th class="column-add">
+          <div class="admin-post-controls">
+            <button class="btn" onclick="addColumn('<%= indices[i] %>')">열 추가</button>
+          </div>
+        </th>
+        <% }; %>
+        <th>첨부파일</th>
+      </tr>
+    </thead>
+  </table>
 </div>
 
-  <script>
-    function confirmDelete() {
-      return confirm("정말 삭제하시겠습니까?");
-    }
+<script>
+  function confirmDelete() {
+    return confirm("정말 삭제하시겠습니까?");
+  }
 
-    function addColumn(index) {
-      let columnName = '';
-      while (!columnName) {
-        columnName = prompt("열 이름을 입력해주세요:");
-        //console.log(columnName);
-        if (columnName === null) return;
-        if (!columnName.trim()) {
-          alert("열 이름은 비워둘 수 없습니다.");
-          columnName = "";
-        }
+  function addColumn(index) {
+    let columnName = '';
+    while (!columnName) {
+      columnName = prompt("열 이름을 입력해주세요:");
+      if (columnName === null) return;
+      if (!columnName.trim()) {
+        alert("열 이름은 비워둘 수 없습니다.");
+        columnName = "";
       }
-      const url = `/addcol/${index}?colname=${encodeURIComponent(columnName.trim())}`;
-      window.location.href = url;
     }
+    const url = `/addcol/${index}?colname=${encodeURIComponent(columnName.trim())}`;
+    window.location.href = url;
+  }
 
-    function editColumn(index, colName) {
-      let columnName = '';
-      while (!columnName) {
-        columnName = prompt("열 이름을 입력해주세요:", colName);
-        console.log(columnName);
-        if (columnName === null) return;
-        if (!columnName.trim()) {
-          alert("열 이름은 비워둘 수 없습니다.");
-          columnName = "";
-        }
+  function editColumn(index, colName) {
+    let columnName = '';
+    while (!columnName) {
+      columnName = prompt("열 이름을 입력해주세요:", colName);
+      console.log(columnName);
+      if (columnName === null) return;
+      if (!columnName.trim()) {
+        alert("열 이름은 비워둘 수 없습니다.");
+        columnName = "";
       }
-      const url = `/editcol/${index}?colname=${encodeURIComponent(columnName.trim())}`;
-      window.location.href = url;
     }
-  </script>
+    const url = `/editcol/${index}?colname=${encodeURIComponent(columnName.trim())}`;
+    window.location.href = url;
+  }
+</script>

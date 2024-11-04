@@ -37,7 +37,7 @@ const getColNames = async () => {
     return colNames;
 }
 
-const getRowArrs = async () => {
+const getRows = async () => {
     const connection = await mysql.createConnection(config);
     const [rows, _] = await connection.execute("SELECT * FROM bidding");
     await connection.end();
@@ -47,7 +47,7 @@ const getRowArrs = async () => {
     return rowsArr;
 }
 
-const getRowArr = async (idx) => {
+const getRow = async (idx) => {
     const connection = await mysql.createConnection(config);
     const [rows, _] = await connection.execute("SELECT * FROM bidding WHERE ID = ?", [idx]);
     await connection.end();
@@ -64,4 +64,4 @@ const getIds = async () => {
     return ids;
 }
 
-module.exports = { config, getIndices, get_Indices, getColNames, getRowArrs, getRowArr, getIds };
+module.exports = { config, getIndices, get_Indices, getColNames, getRows, getRow, getIds };

@@ -25,25 +25,22 @@ const upload = multer({
     }),
     limits: { filzeSize: 100 * 1024 * 1024 },
 });
-
 router.get("/", checkLogin, asyncHandler(async (req, res) => {
     const colNames = await db.getColNames();
     const indices = await db.getIndices();
-    const rowsArr = await db.getRowArrs();
+    const rows = await db.getRows();
     const ids = await db.getIds();
     const filePaths = fctrl.getAllFilePathByIds(ids);
     const fileNames = fctrl.getAllFileNameByIds(ids);
-    res.render("index", { colNames, indices, rowsArr, ids, filePaths, fileNames, layout: mainLayout });
+    res.render("index", { colNames, indices, rows, ids, filePaths, fileNames, layout: mainLayout });
 }));
-
 router.get("/edit/:id", checkLogin, asyncHandler(async (req, res) => {
     const colNames = await db.getColNames();
-    const rowArr = await db.getRowArr(req.params.id);
+    const rowArr = await db.getRow(req.params.id);
     const indices = await db.getIndices();
     const fileName = fctrl.getAllFileNameById(req.params.id);
     res.render("edit", { colNames, rowArr, indices, fileName, layout: mainLayout });
 }));
-
 router.put("/edit/:id", checkLogin, upload.array("files"), asyncHandler(async (req, res) => {
     const _indices = await db.get_Indices();
     str = "UPDATE bidding SET ";
@@ -57,9 +54,8 @@ router.put("/edit/:id", checkLogin, upload.array("files"), asyncHandler(async (r
     const connection = await mysql.createConnection(db.config);
     await connection.execute(str, value);
     await connection.end();
-    res.redirect(`/edit/${req.params.id}`);
+    res.redirect("/");
 }));
-
 router.get("/delete/:id", checkLogin, asyncHandler(async (req, res) => {
     const connection = await mysql.createConnection(db.config);
     await connection.execute("DELETE FROM bidding WHERE ID = ?", [req.params.id]);
@@ -70,13 +66,6 @@ router.get("/delete/:id", checkLogin, asyncHandler(async (req, res) => {
     fs.rmSync(`./uploads/${req.params.id}`, { recursive: true });
     res.redirect("/");
 }));
-
-router.get("/add", checkLogin, asyncHandler(async (req, res) => {
-    const indices = await db.getIndices();
-    const colNames = await db.getColNames();
-    res.render("add", { indices, colNames, layout: mainLayout });
-}));
-
 const addPath = asyncHandler(async (req, res, next) => {
     connection = await mysql.createConnection(db.config);
     const [maxId, _] = await connection.execute("SELECT MAX(id) as maxId from bidding");
@@ -86,7 +75,6 @@ const addPath = asyncHandler(async (req, res, next) => {
     req.params.id = id;
     next();
 });
-
 router.post("/add", checkLogin, addPath, upload.array("files"), asyncHandler(async (req, res) => {
     str = "INSERT INTO bidding VALUES (NULL";
     let value = Object.values(req.body);
@@ -98,24 +86,22 @@ router.post("/add", checkLogin, addPath, upload.array("files"), asyncHandler(asy
     await connection.end();
     res.redirect("/");
 }));
-
 router.get("/editcol", checkLogin, asyncHandler(async (req, res) => {
     const colNames = await db.getColNames();
     const indices = await db.getIndices();
     res.render("edit_col", { colNames, indices, layout: mainLayout });
 }));
-
 router.get("/addcol/:id", checkLogin, asyncHandler(async (req, res) => {
-    const idx = req.params.id;
+    let idx = req.params.id;
+    if (idx != 'id') idx = "_" + idx;
     const columnName = req.query.colname;
     const connection = await mysql.createConnection(db.config);
     await connection.execute(`INSERT INTO cols VALUES (null, "${columnName}")`);
     const [rows, _] = await connection.execute("SELECT MAX(idx) as idx from cols");
-    await connection.execute(`ALTER TABLE bidding ADD COLUMN _${rows[0].idx} TEXT AFTER _${idx}`);
+    await connection.execute(`ALTER TABLE bidding ADD COLUMN _${rows[0].idx} TEXT AFTER ${idx}`);
     await connection.end();
     res.redirect("/");
 }));
-
 router.get("/editcol/:id", checkLogin, asyncHandler(async (req, res) => {
     const idx = req.params.id;
     const columnName = req.query.colname;
@@ -124,23 +110,23 @@ router.get("/editcol/:id", checkLogin, asyncHandler(async (req, res) => {
     await connection.end();
     res.redirect("/");
 }));
-
 router.delete("/deletecol/:id", checkLogin, asyncHandler(async (req, res) => {
     const id = req.params.id;
     const connection = await mysql.createConnection(db.config);
     await connection.execute(`DELETE FROM cols WHERE idx = ${id}`);
     await connection.execute(`ALTER TABLE bidding DROP COLUMN _${id}`);
     const [maxIdx, _] = await connection.execute("SELECT MAX(idx) as idx from cols");
-    await connection.execute(`ALTER TABLE cols AUTO_INCREMENT = ${maxIdx[0].idx + 1}`);
+    let incr = maxIdx[0].idx;
+    if (incr == null) incr = 1;
+    else ++incr;
+    await connection.execute(`ALTER TABLE cols AUTO_INCREMENT = ${incr}`);
     await connection.end();
     res.redirect("/");
 }));
-
 router.get("/deletefile/:id", checkLogin, (req, res) => {
     const id = req.params.id;
     const fileName = req.query.fileName;
     fs.unlinkSync(`./uploads/${id}/${fileName}`);
     res.redirect(`/edit/${id}`);
 });
-
 module.exports = router;
