@@ -34,12 +34,8 @@
           <td><input type="submit" id="submit-btn" value="등록" class="btn" style="pointer-events: none;"></td>
         </tr>
         <tr>
-          <td colspan="<%= indices.length + 1 %>">
-            <div id="fileDropzone" class="dropzone fileList" style="text-align: left;"></div>
-          </td>
         </tr>
       </thead>
-      <div id="loading-spinner" class="loading-spinner">파일을 업로드 중입니다... 절대 끄지 마세요</div>
       <tbody>
         <% for(let i = 0; i < rows.length; ++i) { %>
         <% if(rows[i][0] == id) {%>
@@ -82,11 +78,15 @@
                 <a href="/deletefile/2/<%= id %>?fileName=<%= encodeURIComponent(fileNames2[j]) %>" onclick="return confirmDelete();">&times</a>
               </div>
               <% } %>
+              <div style="text-align: left;">
+              </div>
+              <div id="fileDropzone" class="dropzone fileList" style="text-align: left;"></div>
             </td>
           </tr>
         </form>
         <% continue; %>
         <% } %>
+        <div id="loading-spinner" class="loading-spinner">파일을 업로드 중입니다... 절대 끄지 마세요</div>
         <% const row = rows[i]; %>
         <tr style="opacity: 0.4;">
           <% for(let j = 1; j < row.length; ++j) {%>
@@ -96,25 +96,11 @@
             <button class="toggle-btn" id="toggle-btn1-<%= i %>" onclick="toggleFiles('<%= i %>', 1)">
               첨부파일(<%= filePaths1[i].length %>) &darr;
             </button>
-            <div id="file-list1-<%= i %>" style="display: none;">
-              <% for(let j = 0; j < filePaths1[i].length; ++j) { %>
-              <div>
-                <a href="<%= filePaths1[i][j] %>" download>첨부파일 <%=j+1%></a>
-              </div>
-              <% } %>
-            </div>
           </td>
           <td>
             <button class="toggle-btn" id="toggle-btn2-<%= i %>" onclick="toggleFiles('<%= i %>', 2)">
               첨부파일(<%= filePaths2[i].length %>) &darr;
             </button>
-            <div id="file-list2-<%= i %>" style="display: none;">
-              <% for(let j = 0; j < filePaths2[i].length; ++j) { %>
-              <div>
-                <a href="<%= filePaths2[i][j] %>" download>첨부파일 <%=j+1%></a>
-              </div>
-              <% } %>
-            </div>
           </td>
           <td>
             <div class="admin-post-controls">
@@ -128,49 +114,7 @@
   </div>
 </main>
 
-<!--<form id="myForm" action="/edit/<%= rows[0] %>?_method=PUT" method="POST" enctype="multipart/form-data">
-  <table style="margin-bottom: 15px;" class="table-wrapper">
-    <thead>
-      <tr>
-        <% colNames.forEach(name => { %>
-        <th><%= name %></th>
-        <% }); %>
-        <th>첨부파일</th>
-      </tr>
-    </thead>
-    <thead>
-    <tbody>
-      <tr>
-        <% for(let i = 1; i < rows.length; ++i) { %>
-        <td> <input style="margin: auto;" type="text" value="<%= rows[i] %>" name="<%= i %>"> </td>
-        <% } %>
-        <td style="max-width: 500px; min-width: 300px;">
-          <% for(let i = 0; i < fileNames1.length; ++i) { %>
-          <div>
-            <%= fileNames1[i] %>
-            <a href="/deletefile/<%= rows[0] %>?fileName=<%= encodeURIComponent(fileNames1[i]) %>" onclick="return confirmDelete();">&times</a>
-          </div>
-          <% } %>
-        </td>
-        <td>
-          <a href="/delete/<%= rows[0] %>" class="btn-delete btn" onclick="return confirmDelete();">삭제</a>
-        </td>
-      </tr>
-      <tr>
-        <td colspan="<%= indices.length + 1 %>">
-          <div id="fileDropzone" class="dropzone" style="text-align: left;"></div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <input type="submit" id="submit-btn" value="등록" class="btn" style="margin-top: 20px;">
-  <div id="loading-spinner" class="loading-spinner">파일을 업로드 중입니다... 절대 끄지 마세요</div>
-</form>-->
-
 <script>
-  // Dropzone 초기화
-  Dropzone.autoDiscover = false; // Dropzone의 자동 탐지를 방지
-
   const myDropzone = new Dropzone("#fileDropzone", {
     url: "/upload", // 실제 파일 업로드는 여기서 하지 않음
     autoProcessQueue: false, // 자동으로 서버로 전송하지 않음
@@ -178,12 +122,85 @@
     maxFilesize: 1024, // 최대 파일 크기 (MB)
     addRemoveLinks: true, // 파일 삭제 링크 추가
     dictRemoveFile: "삭제",
-    dictDefaultMessage: "여기로 추가할 파일을 드래그 앤 드롭 하세요",
+    dictDefaultMessage: "여기로 파일을 드래그 앤 드롭 하세요",
     parallelUploads: 10, // 한 번에 여러 파일 처리
     showProgress: false,
+    previewTemplate: `
+        <div class="custom-preview">
+            <span class="file-name"></span>
+            <span class="file-size"></span>
+        </div>
+    `,
+    init: function() {
+      // 파일이 추가될 때마다 호출
+      this.on("addedfile", function(file) {
+        // 파일이 추가되면 드롭존 표시
+        document.getElementById("fileDropzone").style.display = "block";
+      });
+
+      // 파일이 제거될 때마다 호출
+      this.on("removedfile", function(file) {
+        if (this.files.length === 0) {
+          // 파일이 없으면 드롭존 숨김
+          document.getElementById("fileDropzone").style.display = "none";
+        }
+      });
+    }
+  });
+  myDropzone.on("addedfile", function(file) {
+    const previewElement = file.previewElement;
+    previewElement.querySelector(".file-name").textContent = file.name;
+    previewElement.querySelector(".file-size").textContent = `(${(file.size / 1024 / 1024).toFixed(2)} MB)`;
   });
 
-  // 폼 제출 시 파일과 데이터를 함께 전송
+  let uploadZone = Array.from(document.querySelectorAll(".upload-zone")).slice(2);
+  const fileInput = [document.createElement("input"), document.createElement("input")];
+  for (let i = 0; i < fileInput.length; ++i) {
+    fileInput[i].type = "file";
+    fileInput[i].multiple = true;
+  }
+  for (let i = 0; i < uploadZone.length; ++i) {
+    uploadZone[i].addEventListener("click", () => {
+      fileInput[i].click();
+    });
+    fileInput[i].addEventListener("change", () => {
+      const files = fileInput[i].files;
+      for (let j = 0; j < files.length; j++) {
+        const newFileName = `${i+1}_` + files[j].name;
+        const newFile = new File([files[j]], newFileName, {
+          type: files[j].type
+        });
+        myDropzone.addFile(newFile);
+      }
+      fileInput.value = ""; // 파일 선택 후 input을 초기화
+    });
+    uploadZone[i].addEventListener("mouseover", () => {
+      uploadZone[i].style.cursor = "pointer";
+    });
+    uploadZone[i].addEventListener("mouseout", () => {
+      uploadZone[i].style.cursor = "default";
+    });
+    uploadZone[i].addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadZone[i].style.borderColor = 'black';
+    });
+    uploadZone[i].addEventListener('dragleave', () => {
+      uploadZone[i].style.borderColor = '#aaa';
+    });
+    uploadZone[i].addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadZone[i].style.borderColor = '#aaa';
+      const files = e.dataTransfer.files;
+      for (let j = 0; j < files.length; j++) {
+        const newFileName = `${i+1}_` + files[j].name;
+        const newFile = new File([files[j]], newFileName, {
+          type: files[j].type
+        });
+        myDropzone.addFile(newFile);
+      }
+    });
+  }
+
   document.getElementById("myForm").addEventListener("submit", function(e) {
     let check = confirm("등록하시겠습니까?");
     if (!check) {
@@ -191,7 +208,6 @@
       return;
     }
 
-    // 로딩 스피너 표시 및 제출 버튼 비활성화
     document.getElementById("loading-spinner").style.display = "block";
     document.getElementById("submit-btn").disabled = true;
 
@@ -207,8 +223,7 @@
       this.appendChild(fileInput); // 동적으로 폼에 추가
     });
 
-    // 기본 제출 방지 후 폼 제출
-    this.submit(); // 이제 폼 데이터를 기본 제출 방식으로 전송
+    this.submit();
   });
 </script>
 
