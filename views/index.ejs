@@ -77,11 +77,11 @@
     const parentTd = toggleBtn.closest("td");
 
     if (fileList.style.display === "none") {
-      parentTd.style.width = "300px";
+      parentTd.style.minWidth = "300px";
       fileList.style.display = "block";
       toggleBtn.innerHTML = `첨부파일(${fileList.children.length}) &uarr;`; // 위 화살표
     } else {
-      parentTd.style.width = "unset";
+      parentTd.style.minWidth = "unset";
       fileList.style.display = "none";
       toggleBtn.innerHTML = `첨부파일(${fileList.children.length}) &darr;`; // 아래 화살표
     }
