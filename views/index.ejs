@@ -30,9 +30,11 @@
             </td>
             <% } %>
             <td>
-              <div id="upload-zone">Drag and Drop</div>
+              <div class="upload-zone">Drag and Drop</div>
             </td>
-            <td></td>
+            <td>
+              <div class="upload-zone">Drag and Drop</div>
+            </td>
             <td><input type="submit" id="submit-btn" value="등록" class="btn"></td>
           </tr>
           <tr>
@@ -50,10 +52,10 @@
         <td><%= row[j] %></td>
         <% } %>
         <td>
-          <button class="toggle-btn" id="toggle-btn-<%= i %>" onclick="toggleFiles('<%= i %>')">
+          <button class="toggle-btn" id="toggle-btn1-<%= i %>" onclick="toggleFiles('<%= i %>', 1)">
             첨부파일(<%= filePaths1[i].length %>) &darr;
           </button>
-          <div id="file-list-<%= i %>" style="display: none;">
+          <div id="file-list1-<%= i %>" style="display: none;">
             <% for(let j = 0; j < filePaths1[i].length; ++j) { %>
             <div>
               <a href="<%= filePaths1[i][j] %>" download>첨부파일 <%=j+1%></a>
@@ -61,7 +63,18 @@
             <% } %>
           </div>
         </td>
-        <td></td>
+        <td>
+          <button class="toggle-btn" id="toggle-btn2-<%= i %>" onclick="toggleFiles('<%= i %>', 2)">
+            첨부파일(<%= filePaths2[i].length %>) &darr;
+          </button>
+          <div id="file-list2-<%= i %>" style="display: none;">
+            <% for(let j = 0; j < filePaths2[i].length; ++j) { %>
+            <div>
+              <a href="<%= filePaths2[i][j] %>" download>첨부파일 <%=j+1%></a>
+            </div>
+            <% } %>
+          </div>
+        </td>
         <td>
           <div class="admin-post-controls">
             <a href="/edit/<%= row[0] %>" class="btn">편집</a>
@@ -74,9 +87,9 @@
 </main>
 
 <script>
-  function toggleFiles(index) {
-    const fileList = document.getElementById(`file-list-${index}`);
-    const toggleBtn = document.getElementById(`toggle-btn-${index}`);
+  function toggleFiles(index, ith) {
+    const fileList = document.getElementById(`file-list${ith}-${index}`);
+    const toggleBtn = document.getElementById(`toggle-btn${ith}-${index}`);
 
     if (fileList.style.display === "none") {
       fileList.style.display = "block";
@@ -128,49 +141,54 @@
     previewElement.querySelector(".file-size").textContent = `(${(file.size / 1024 / 1024).toFixed(2)} MB)`;
   });
 
-  const uploadZone = document.getElementById("upload-zone");
-  const fileInput = document.createElement("input");
-  fileInput.type = "file";
-  fileInput.multiple = true;
-  uploadZone.addEventListener("click", () => {
-    fileInput.click();
-  });
-  fileInput.addEventListener("change", () => {
-    const files = fileInput.files;
-    for (let i = 0; i < files.length; i++) {
-      const newFileName = "1_" + files[i].name;
-      const newFile = new File([files[i]], newFileName, {
-        type: files[i].type
-      });
-      myDropzone.addFile(newFile);
-      //myDropzone.addFile(files[i]);
-    }
-    fileInput.value = ""; // 파일 선택 후 input을 초기화
-  });
-  uploadZone.addEventListener("mouseover", () => {
-    uploadZone.style.cursor = "pointer";
-  });
-  uploadZone.addEventListener("mouseout", () => {
-    uploadZone.style.cursor = "default";
-  });
-  uploadZone.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    uploadZone.style.borderColor = 'black';
-  });
-  uploadZone.addEventListener('dragleave', () => {
-    uploadZone.style.borderColor = '#aaa';
-  });
-  uploadZone.addEventListener('drop', (e) => {
-    e.preventDefault();
-    uploadZone.style.borderColor = '#aaa';
-    const files = e.dataTransfer.files;
-    for (let i = 0; i < files.length; i++) {
-      myDropzone.addFile(files[i])
-    }
-  });
-  //
+  const uploadZone = document.querySelectorAll(".upload-zone");
+  const fileInput = [document.createElement("input"), document.createElement("input")];
+  for (let i = 0; i < fileInput.length; ++i) {
+    fileInput[i].type = "file";
+    fileInput[i].multiple = true;
+  }
+  for (let i = 0; i < uploadZone.length; ++i) {
+    uploadZone[i].addEventListener("click", () => {
+      fileInput[i].click();
+    });
+    fileInput[i].addEventListener("change", () => {
+      const files = fileInput[i].files;
+      for (let j = 0; j < files.length; j++) {
+        const newFileName = `${i+1}_` + files[j].name;
+        const newFile = new File([files[j]], newFileName, {
+          type: files[j].type
+        });
+        myDropzone.addFile(newFile);
+      }
+      fileInput.value = ""; // 파일 선택 후 input을 초기화
+    });
+    uploadZone[i].addEventListener("mouseover", () => {
+      uploadZone[i].style.cursor = "pointer";
+    });
+    uploadZone[i].addEventListener("mouseout", () => {
+      uploadZone[i].style.cursor = "default";
+    });
+    uploadZone[i].addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadZone[i].style.borderColor = 'black';
+    });
+    uploadZone[i].addEventListener('dragleave', () => {
+      uploadZone[i].style.borderColor = '#aaa';
+    });
+    uploadZone[i].addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadZone[i].style.borderColor = '#aaa';
+      const files = e.dataTransfer.files;
+      for (let j = 0; j < files.length; j++) {
+        const newFileName = `${i+1}_` + files[j].name;
+        const newFile = new File([files[j]], newFileName, {
+          type: files[j].type
+        });
+        myDropzone.addFile(newFile);
+      }
+    });
+  }
 
-  // 폼 제출 시 파일과 데이터를 함께 전송
   document.getElementById("myForm").addEventListener("submit", function(e) {
     let check = confirm("등록하시겠습니까?");
     if (!check) {

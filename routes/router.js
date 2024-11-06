@@ -22,7 +22,7 @@ const upload = multer({
         },
         filename(req, file, done) {
             // 파일 이름을 UTF-8로 변환
-            const fileName = Buffer.from(file.originalname, 'latin1').toString('utf8');
+            const fileName = Buffer.from(file.originalname, 'latin1').toString('utf8').slice(2);
             const ext = path.extname(fileName);
             done(null, path.basename(fileName, ext) + ext);
         }
@@ -35,8 +35,8 @@ router.get("/", checkLogin, asyncHandler(async (req, res) => {
     const rows = await db.getRows();
     const ids = await db.getIds();
     const filePaths1 = fctrl.getAllFilePathByIds(ids, 1);
-    const fileNames1 = fctrl.getAllFileNameByIds(ids, 1);
-    res.render("index", { colNames, indices, rows, ids, filePaths1, fileNames1, layout: mainLayout });
+    const filePaths2 = fctrl.getAllFilePathByIds(ids, 2);
+    res.render("index", { colNames, indices, rows, ids, filePaths1, filePaths2, layout: mainLayout });
 }));
 router.get("/edit/:id", checkLogin, asyncHandler(async (req, res) => {
     const colNames = await db.getColNames();
