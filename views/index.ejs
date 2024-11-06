@@ -24,7 +24,9 @@
         <tbody>
           <tr>
             <% for(let i = 0; i < indices.length; ++i) { %>
-            <td> <input type="text" name="<%= i %>"> </td>
+            <td style="padding: 0 3px;">
+              <input type="text" name="<%= i %>" style="margin: auto">
+            </td>
             <% } %>
             <td>
               <div id="upload-zone">Drag and Drop</div>
@@ -32,50 +34,42 @@
             <td><input type="submit" id="submit-btn" value="등록" class="btn"></td>
           </tr>
           <tr>
-            <td colspan="<%= indices.length + 1 %>" style="text-align: left;">
-              <div id="fileDropzone" class="dropzone fileList"></div>
+            <td colspan="<%= indices.length + 1 %>">
+              <div id="fileDropzone" class="dropzone fileList" style="text-align: left;"></div>
             </td>
           </tr>
         </tbody>
         <div id="loading-spinner" class="loading-spinner">파일을 업로드 중입니다... 절대 끄지 마세요</div>
       </form>
-    </table>
-  </div>
-
-  <div role="region" aria-label="data table" tabindex="0" class="primary table-wrapper">
-    <table>
-      <tbody>
-        <% for(let i = 0; i < rows.length; ++i) { %>
-        <% const row = rows[i]; %>
-        <tr>
-          <% for(let j = 1; j < row.length; ++j) {%>
-          <td><%= row[j] %></td>
-          <% } %>
-          <td>
-            <button class="toggle-btn" id="toggle-btn-<%= i %>" onclick="toggleFiles('<%= i %>')">
-              첨부파일(<%= filePaths[i].length %>) &darr;
-            </button>
-            <div id="file-list-<%= i %>" style="display: none">
-              <% for(let j = 0; j < filePaths[i].length; ++j) { %>
-              <div>
-                <a href="<%= filePaths[i][j] %>" download> <%= fileNames[i][j] %> </a>
-              </div>
-              <% } %>
+      <% for(let i = 0; i < rows.length; ++i) { %>
+      <% const row = rows[i]; %>
+      <tr>
+        <% for(let j = 1; j < row.length; ++j) {%>
+        <td><%= row[j] %></td>
+        <% } %>
+        <td>
+          <button class="toggle-btn" id="toggle-btn-<%= i %>" onclick="toggleFiles('<%= i %>')">
+            첨부파일(<%= filePaths[i].length %>) &darr;
+          </button>
+          <div id="file-list-<%= i %>" style="display: none;">
+            <% for(let j = 0; j < filePaths[i].length; ++j) { %>
+            <div>
+              <a href="<%= filePaths[i][j] %>" download> <%= fileNames[i][j] %> </a>
             </div>
-          </td>
-          <td>
-            <div class="admin-post-controls">
-              <a href="/edit/<%= row[0] %>" class="btn">편집</a>
-            </div>
-          </td>
-        </tr>
-        <% }; %>
-      </tbody>
+            <% } %>
+          </div>
+        </td>
+        <td>
+          <div class="admin-post-controls">
+            <a href="/edit/<%= row[0] %>" class="btn">편집</a>
+          </div>
+        </td>
+      </tr>
+      <% }; %>
     </table>
   </div>
 </main>
 
-<!--첨부파일-->
 <script>
   function toggleFiles(index) {
     const fileList = document.getElementById(`file-list-${index}`);
