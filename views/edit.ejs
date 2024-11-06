@@ -90,7 +90,11 @@
         <% const row = rows[i]; %>
         <tr style="opacity: 0.4;">
           <% for(let j = 1; j < row.length; ++j) {%>
+          <% if(row[j][0] == "h") {%>
+          <td style="background-color: yellow;"><%= row[j].slice(1) %></td>
+          <% } else {%>
           <td><%= row[j] %></td>
+          <% } %>
           <% } %>
           <td>
             <button class="toggle-btn" id="toggle-btn1-<%= i %>" onclick="toggleFiles('<%= i %>', 1)">
