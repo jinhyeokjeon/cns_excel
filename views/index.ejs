@@ -47,7 +47,7 @@
         <% for(let j = 1; j < row.length; ++j) {%>
         <td><%= row[j] %></td>
         <% } %>
-        <td>
+        <td style="max-width: 500px;">
           <button class="toggle-btn" id="toggle-btn-<%= i %>" onclick="toggleFiles('<%= i %>')">
             첨부파일(<%= filePaths[i].length %>) &darr;
           </button>
