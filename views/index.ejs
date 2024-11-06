@@ -9,7 +9,6 @@
 
 <main>
   <div role="region" aria-label="data table" tabindex="0" class="primary table-wrapper">
-    <!-- Note: use the aria-label attribute above to describe this keyboard-focusable region appropriately, per your implementation. Alternatively, it could instead be an aria-labelledby attribute that points to a table caption's ID attribute. Thx for thoughts, @aardrian  -->
     <table style="margin-bottom: 15px;">
       <thead>
         <tr>
@@ -20,10 +19,7 @@
           <th><%= fileColNames[i] %></th>
           <% } %>
         </tr>
-      </thead>
-
-      <form id="myForm" action="/add" method="POST" enctype="multipart/form-data">
-        <tbody>
+        <form id="myForm" action="/add" method="POST" enctype="multipart/form-data">
           <tr>
             <% for(let i = 0; i < indices.length; ++i) { %>
             <td style="padding: 0 3px;">
@@ -43,46 +39,48 @@
               <div id="fileDropzone" class="dropzone fileList" style="text-align: left;"></div>
             </td>
           </tr>
-        </tbody>
-        <div id="loading-spinner" class="loading-spinner">파일을 업로드 중입니다... 절대 끄지 마세요</div>
-      </form>
-      <% for(let i = 0; i < rows.length; ++i) { %>
-      <% const row = rows[i]; %>
-      <tr>
-        <% for(let j = 1; j < row.length; ++j) {%>
-        <td><%= row[j] %></td>
-        <% } %>
-        <td>
-          <button class="toggle-btn" id="toggle-btn1-<%= i %>" onclick="toggleFiles('<%= i %>', 1)">
-            첨부파일(<%= filePaths1[i].length %>) &darr;
-          </button>
-          <div id="file-list1-<%= i %>" style="display: none;">
-            <% for(let j = 0; j < filePaths1[i].length; ++j) { %>
-            <div>
-              <a href="<%= filePaths1[i][j] %>" download>첨부파일 <%=j+1%></a>
+        </form>
+      </thead>
+      <div id="loading-spinner" class="loading-spinner">파일을 업로드 중입니다... 절대 끄지 마세요</div>
+      <tbody>
+        <% for(let i = 0; i < rows.length; ++i) { %>
+        <% const row = rows[i]; %>
+        <tr>
+          <% for(let j = 1; j < row.length; ++j) {%>
+          <td><%= row[j] %></td>
+          <% } %>
+          <td>
+            <button class="toggle-btn" id="toggle-btn1-<%= i %>" onclick="toggleFiles('<%= i %>', 1)">
+              첨부파일(<%= filePaths1[i].length %>) &darr;
+            </button>
+            <div id="file-list1-<%= i %>" style="display: none;">
+              <% for(let j = 0; j < filePaths1[i].length; ++j) { %>
+              <div>
+                <a href="<%= filePaths1[i][j] %>" download>첨부파일 <%=j+1%></a>
+              </div>
+              <% } %>
             </div>
-            <% } %>
-          </div>
-        </td>
-        <td>
-          <button class="toggle-btn" id="toggle-btn2-<%= i %>" onclick="toggleFiles('<%= i %>', 2)">
-            첨부파일(<%= filePaths2[i].length %>) &darr;
-          </button>
-          <div id="file-list2-<%= i %>" style="display: none;">
-            <% for(let j = 0; j < filePaths2[i].length; ++j) { %>
-            <div>
-              <a href="<%= filePaths2[i][j] %>" download>첨부파일 <%=j+1%></a>
+          </td>
+          <td>
+            <button class="toggle-btn" id="toggle-btn2-<%= i %>" onclick="toggleFiles('<%= i %>', 2)">
+              첨부파일(<%= filePaths2[i].length %>) &darr;
+            </button>
+            <div id="file-list2-<%= i %>" style="display: none;">
+              <% for(let j = 0; j < filePaths2[i].length; ++j) { %>
+              <div>
+                <a href="<%= filePaths2[i][j] %>" download>첨부파일 <%=j+1%></a>
+              </div>
+              <% } %>
             </div>
-            <% } %>
-          </div>
-        </td>
-        <td>
-          <div class="admin-post-controls">
-            <a href="/edit/<%= row[0] %>" class="btn">수정</a>
-          </div>
-        </td>
-      </tr>
-      <% }; %>
+          </td>
+          <td>
+            <div class="admin-post-controls">
+              <a href="/edit/<%= row[0] %>" class="btn">수정</a>
+            </div>
+          </td>
+        </tr>
+        <% }; %>
+      </tbody>
     </table>
   </div>
 </main>

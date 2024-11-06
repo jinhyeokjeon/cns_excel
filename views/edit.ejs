@@ -1,12 +1,116 @@
-<a href="/">&larr; 뒤로</a>
-<div class="admin-title">
-  <h2>편집</h2>
-  <!--<form action="/delete/<%= rowArr[0] %>?_method=DELETE" method="POST" onsubmit="return confirmDelete();">
-    <input type="submit" value="삭제" class="btn-delete btn">
-  </form>-->
-</div>
+<header class="header">
+  <div style="margin-bottom: 15px;">
+    <a href="/">&larr; 뒤로</a>
+  </div>
+  <div class="header-button">
+    <a href="/logout">관리자 로그아웃</a>
+  </div>
+</header>
 
-<form id="myForm" action="/edit/<%= rowArr[0] %>?_method=PUT" method="POST" enctype="multipart/form-data">
+<main>
+  <div role="region" aria-label="data table" tabindex="0" class="primary table-wrapper">
+    <table style="margin-bottom: 15px;">
+      <thead>
+        <tr>
+          <% colNames.forEach(col => { %>
+          <th><%= col %></th>
+          <%}); %>
+          <% for(let i = 0; i < fileColNames.length; ++i) { %>
+          <th><%= fileColNames[i] %></th>
+          <% } %>
+        </tr>
+        <tr style="opacity: 0.4;">
+          <% for(let i = 0; i < indices.length; ++i) { %>
+          <td style="padding: 0 3px;">
+            <input type="text" name="<%= i %>" style="margin: auto">
+          </td>
+          <% } %>
+          <td>
+            <div class="upload-zone">파일 업로드</div>
+          </td>
+          <td>
+            <div class="upload-zone">파일 업로드</div>
+          </td>
+          <td><input type="submit" id="submit-btn" value="등록" class="btn" style="pointer-events: none;"></td>
+        </tr>
+        <tr>
+          <td colspan="<%= indices.length + 1 %>">
+            <div id="fileDropzone" class="dropzone fileList" style="text-align: left;"></div>
+          </td>
+        </tr>
+      </thead>
+      <div id="loading-spinner" class="loading-spinner">파일을 업로드 중입니다... 절대 끄지 마세요</div>
+      <tbody>
+        <% for(let i = 0; i < rows.length; ++i) { %>
+        <% if(rows[i][0] == id) {%>
+        <form id="myForm" action="/edit/<%= id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+          <tr>
+            <% for(let j = 0; j < indices.length; ++j) { %>
+            <td style="padding: 0 3px;">
+              <input type="text" value="<%= rows[i][j + 1] %>" name="<%= i %>" style="margin: auto">
+            </td>
+            <% } %>
+            <td>
+              <div class="upload-zone">파일 업로드</div>
+            </td>
+            <td>
+              <div class="upload-zone">파일 업로드</div>
+            </td>
+            <td><input type="submit" id="submit-btn" value="등록" class="btn"></td>
+          </tr>
+          <tr>
+            <td colspan="<%= indices.length + 1 %>">
+              <div style="text-align: left;">
+                <%= fileNames1[i] %>
+                <a href="/deletefile/<%= rows[0] %>?fileName=<%= encodeURIComponent(fileNames1) %>" onclick="return confirmDelete();">&times</a>
+              </div>
+            </td>
+          </tr>
+        </form>
+        <% continue; %>
+        <% } %>
+        <% const row = rows[i]; %>
+        <tr style="opacity: 0.4;">
+          <% for(let j = 1; j < row.length; ++j) {%>
+          <td><%= row[j] %></td>
+          <% } %>
+          <td>
+            <button class="toggle-btn" id="toggle-btn1-<%= i %>" onclick="toggleFiles('<%= i %>', 1)">
+              첨부파일(<%= filePaths1[i].length %>) &darr;
+            </button>
+            <div id="file-list1-<%= i %>" style="display: none;">
+              <% for(let j = 0; j < filePaths1[i].length; ++j) { %>
+              <div>
+                <a href="<%= filePaths1[i][j] %>" download>첨부파일 <%=j+1%></a>
+              </div>
+              <% } %>
+            </div>
+          </td>
+          <td>
+            <button class="toggle-btn" id="toggle-btn2-<%= i %>" onclick="toggleFiles('<%= i %>', 2)">
+              첨부파일(<%= filePaths2[i].length %>) &darr;
+            </button>
+            <div id="file-list2-<%= i %>" style="display: none;">
+              <% for(let j = 0; j < filePaths2[i].length; ++j) { %>
+              <div>
+                <a href="<%= filePaths2[i][j] %>" download>첨부파일 <%=j+1%></a>
+              </div>
+              <% } %>
+            </div>
+          </td>
+          <td>
+            <div class="admin-post-controls">
+              <a href="/edit/<%= row[0] %>" class="btn">수정</a>
+            </div>
+          </td>
+        </tr>
+        <% }; %>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<!--<form id="myForm" action="/edit/<%= rows[0] %>?_method=PUT" method="POST" enctype="multipart/form-data">
   <table style="margin-bottom: 15px;" class="table-wrapper">
     <thead>
       <tr>
@@ -19,19 +123,19 @@
     <thead>
     <tbody>
       <tr>
-        <% for(let i = 1; i < rowArr.length; ++i) { %>
-        <td> <input style="margin: auto;" type="text" value="<%= rowArr[i] %>" name="<%= i %>"> </td>
+        <% for(let i = 1; i < rows.length; ++i) { %>
+        <td> <input style="margin: auto;" type="text" value="<%= rows[i] %>" name="<%= i %>"> </td>
         <% } %>
         <td style="max-width: 500px; min-width: 300px;">
-          <% for(let i = 0; i < fileName.length; ++i) { %>
+          <% for(let i = 0; i < fileNames1.length; ++i) { %>
           <div>
-            <%= fileName[i] %>
-            <a href="/deletefile/<%= rowArr[0] %>?fileName=<%= encodeURIComponent(fileName[i]) %>" onclick="return confirmDelete();">&times</a>
+            <%= fileNames1[i] %>
+            <a href="/deletefile/<%= rows[0] %>?fileName=<%= encodeURIComponent(fileNames1) %>" onclick="return confirmDelete();">&times</a>
           </div>
           <% } %>
         </td>
         <td>
-          <a href="/delete/<%= rowArr[0] %>" class="btn-delete btn" onclick="return confirmDelete();">삭제</a>
+          <a href="/delete/<%= rows[0] %>" class="btn-delete btn" onclick="return confirmDelete();">삭제</a>
         </td>
       </tr>
       <tr>
@@ -41,10 +145,9 @@
       </tr>
     </tbody>
   </table>
-  <!--<div id="fileDropzone" class="dropzone"></div>-->
   <input type="submit" id="submit-btn" value="등록" class="btn" style="margin-top: 20px;">
   <div id="loading-spinner" class="loading-spinner">파일을 업로드 중입니다... 절대 끄지 마세요</div>
-</form>
+</form>-->
 
 <script>
   // Dropzone 초기화

@@ -59,7 +59,7 @@ tbody th {
   background-color: #f8f8f8;
 }
 
-tbody tr td:last-child {
+tr td:last-child {
   border: 0;
 }
 

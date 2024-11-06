@@ -37,14 +37,20 @@ router.get("/", checkLogin, asyncHandler(async (req, res) => {
     const filePaths1 = fctrl.getAllFilePathByIds(ids, 1);
     const filePaths2 = fctrl.getAllFilePathByIds(ids, 2);
     const fileColNames = await db.getFileColNames();
-    res.render("index", { colNames, indices, rows, ids, filePaths1, filePaths2, fileColNames, layout: mainLayout });
+    res.render("index", { colNames, indices, rows, filePaths1, filePaths2, fileColNames, layout: mainLayout });
 }));
 router.get("/edit/:id", checkLogin, asyncHandler(async (req, res) => {
     const colNames = await db.getColNames();
-    const rowArr = await db.getRow(req.params.id);
     const indices = await db.getIndices();
-    const fileName = fctrl.getAllFileNameById(req.params.id);
-    res.render("edit", { colNames, rowArr, indices, fileName, layout: mainLayout });
+    const rows = await db.getRows();
+    const ids = await db.getIds();
+    const id = req.params.id;
+    const filePaths1 = fctrl.getAllFilePathByIds(ids, 1);
+    const filePaths2 = fctrl.getAllFilePathByIds(ids, 2);
+    const fileColNames = await db.getFileColNames();
+    const fileNames1 = fctrl.getAllFileNameById(id, 1);
+    const fileNames2 = fctrl.getAllFileNameById(id, 2);
+    res.render("edit", { colNames, indices, rows, id, filePaths1, filePaths2, fileNames1, fileNames2, fileColNames, layout: mainLayout });
 }));
 router.put("/edit/:id", checkLogin, upload.array("files"), asyncHandler(async (req, res) => {
     const _indices = await db.get_Indices();
@@ -54,7 +60,7 @@ router.put("/edit/:id", checkLogin, upload.array("files"), asyncHandler(async (r
         if (i < _indices.length - 1) str += ", ";
     }
     str += " WHERE id = ? ";
-    let value = Object.values(req.body);
+    let value = Object.values(req.body)[0];
     value.push(req.params.id);
     const connection = await mysql.createConnection(db.config);
     await connection.execute(str, value);

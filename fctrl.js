@@ -23,8 +23,8 @@ const getAllFileNameByIds = (ids, ith) => {
     return ret;
 }
 
-const getAllFileNameById = (id) => {
-    return fs.readdirSync(`./uploads/${id}`);
+const getAllFileNameById = (id, ith) => {
+    return fs.readdirSync(`./uploads/${id}/${ith}`);
 }
 
 module.exports = { getAllFilePathById, getAllFilePathByIds, getAllFileNameByIds, getAllFileNameById };
