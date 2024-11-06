@@ -47,7 +47,7 @@
         <% for(let j = 1; j < row.length; ++j) {%>
         <td><%= row[j] %></td>
         <% } %>
-        <td style="max-width: 500px;">
+        <td style="max-width: 300px;">
           <button class="toggle-btn" id="toggle-btn-<%= i %>" onclick="toggleFiles('<%= i %>')">
             첨부파일(<%= filePaths[i].length %>) &darr;
           </button>
@@ -74,14 +74,18 @@
   function toggleFiles(index) {
     const fileList = document.getElementById(`file-list-${index}`);
     const toggleBtn = document.getElementById(`toggle-btn-${index}`);
+    const parentTd = toggleBtn.closest("td");
 
     if (fileList.style.display === "none") {
+      parentTd.style.width = "300px";
       fileList.style.display = "block";
       toggleBtn.innerHTML = `첨부파일(${fileList.children.length}) &uarr;`; // 위 화살표
     } else {
+      parentTd.style.width = "unset";
       fileList.style.display = "none";
       toggleBtn.innerHTML = `첨부파일(${fileList.children.length}) &darr;`; // 아래 화살표
     }
+    console.log(`minWidth: ${parentTd.style.minWidth}, display: ${fileList.style.display}`);
   }
 </script>
 

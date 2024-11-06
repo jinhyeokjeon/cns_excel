@@ -7,7 +7,7 @@
 </div>
 
 <form id="myForm" action="/edit/<%= rowArr[0] %>?_method=PUT" method="POST" enctype="multipart/form-data">
-  <table style="margin-bottom: 15px;">
+  <table style="margin-bottom: 15px;" class="table-wrapper">
     <thead>
       <tr>
         <% colNames.forEach(name => { %>
@@ -20,9 +20,9 @@
     <tbody>
       <tr>
         <% for(let i = 1; i < rowArr.length; ++i) { %>
-        <td> <input type="text" value="<%= rowArr[i] %>" name="<%= i %>"> </td>
+        <td> <input style="margin: auto;" type="text" value="<%= rowArr[i] %>" name="<%= i %>"> </td>
         <% } %>
-        <td>
+        <td style="max-width: 500px; min-width: 300px;">
           <% for(let i = 0; i < fileName.length; ++i) { %>
           <div>
             <%= fileName[i] %>

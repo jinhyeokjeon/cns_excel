@@ -12,7 +12,6 @@ header {
 table {
   border-collapse: collapse;
   border: 0;
-  /*table-layout: auto;*/
 }
 
 th,
