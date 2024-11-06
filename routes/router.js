@@ -36,7 +36,8 @@ router.get("/", checkLogin, asyncHandler(async (req, res) => {
     const ids = await db.getIds();
     const filePaths1 = fctrl.getAllFilePathByIds(ids, 1);
     const filePaths2 = fctrl.getAllFilePathByIds(ids, 2);
-    res.render("index", { colNames, indices, rows, ids, filePaths1, filePaths2, layout: mainLayout });
+    const fileColNames = await db.getFileColNames();
+    res.render("index", { colNames, indices, rows, ids, filePaths1, filePaths2, fileColNames, layout: mainLayout });
 }));
 router.get("/edit/:id", checkLogin, asyncHandler(async (req, res) => {
     const colNames = await db.getColNames();

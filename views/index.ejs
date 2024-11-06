@@ -16,8 +16,9 @@
           <% colNames.forEach(col => { %>
           <th><%= col %></th>
           <%}); %>
-          <th>첨부파일1</th>
-          <th>첨부파일2</th>
+          <% for(let i = 0; i < fileColNames.length; ++i) { %>
+          <th><%= fileColNames[i] %></th>
+          <% } %>
         </tr>
       </thead>
 
@@ -77,7 +78,7 @@
         </td>
         <td>
           <div class="admin-post-controls">
-            <a href="/edit/<%= row[0] %>" class="btn">편집</a>
+            <a href="/edit/<%= row[0] %>" class="btn">수정</a>
           </div>
         </td>
       </tr>

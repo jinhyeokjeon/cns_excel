@@ -4,10 +4,8 @@ const fs = require("fs");
 const getAllFilePathById = (id, ith) => {
     const p = `./uploads/${id}/${ith}`
     const files = fs.readdirSync(p);
-    console.log(files);
     for (let i = 0; i < files.length; ++i)
         files[i] = `/${id}/${ith}/` + files[i];
-    console.log(files);
     return files;
 }
 
