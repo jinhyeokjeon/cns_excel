@@ -60,10 +60,28 @@
           </tr>
           <tr>
             <td colspan="<%= indices.length + 1 %>">
+              <% if(fileNames1.length > 0) { %>
               <div style="text-align: left;">
-                <%= fileNames1[i] %>
-                <a href="/deletefile/<%= rows[0] %>?fileName=<%= encodeURIComponent(fileNames1) %>" onclick="return confirmDelete();">&times</a>
+                <b>[<%= fileColNames[0] %>]</b>
               </div>
+              <% } %>
+              <% for(let j = 0; j < fileNames1.length; ++j) { %>
+              <div style="text-align: left;">
+                <%= fileNames1[j] %>
+                <a href="/deletefile/1/<%= id %>?fileName=<%= encodeURIComponent(fileNames1[j]) %>" onclick="return confirmDelete();">&times</a>
+              </div>
+              <% } %>
+              <% if(fileNames2.length > 0) { %>
+              <div style="text-align: left;">
+                <b>[<%= fileColNames[1] %>]</b>
+              </div>
+              <% } %>
+              <% for(let j = 0; j < fileNames2.length; ++j) { %>
+              <div style="text-align: left;">
+                <%= fileNames2[j] %>
+                <a href="/deletefile/2/<%= id %>?fileName=<%= encodeURIComponent(fileNames2[j]) %>" onclick="return confirmDelete();">&times</a>
+              </div>
+              <% } %>
             </td>
           </tr>
         </form>
@@ -130,7 +148,7 @@
           <% for(let i = 0; i < fileNames1.length; ++i) { %>
           <div>
             <%= fileNames1[i] %>
-            <a href="/deletefile/<%= rows[0] %>?fileName=<%= encodeURIComponent(fileNames1) %>" onclick="return confirmDelete();">&times</a>
+            <a href="/deletefile/<%= rows[0] %>?fileName=<%= encodeURIComponent(fileNames1[i]) %>" onclick="return confirmDelete();">&times</a>
           </div>
           <% } %>
         </td>

@@ -145,10 +145,11 @@ router.delete("/deletecol/:id", checkLogin, asyncHandler(async (req, res) => {
     await connection.end();
     res.redirect("/");
 }));
-router.get("/deletefile/:id", checkLogin, (req, res) => {
+router.get("/deletefile/:ith/:id", checkLogin, (req, res) => {
+    const ith = req.params.ith;
     const id = req.params.id;
     const fileName = req.query.fileName;
-    fs.unlinkSync(`./uploads/${id}/${fileName}`);
+    fs.unlinkSync(`./uploads/${id}/${ith}/${fileName}`);
     res.redirect(`/edit/${id}`);
 });
 module.exports = router;
