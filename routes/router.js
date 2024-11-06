@@ -96,7 +96,8 @@ router.post("/add", checkLogin, addPath, upload.array("files"), asyncHandler(asy
 router.get("/editcol", checkLogin, asyncHandler(async (req, res) => {
     const colNames = await db.getColNames();
     const indices = await db.getIndices();
-    res.render("edit_col", { colNames, indices, layout: mainLayout });
+    const fileColNames = await db.getFileColNames();
+    res.render("edit_col", { colNames, indices, fileColNames, layout: mainLayout });
 }));
 router.get("/addcol/:id", checkLogin, asyncHandler(async (req, res) => {
     let idx = req.params.id;
@@ -114,6 +115,14 @@ router.get("/editcol/:id", checkLogin, asyncHandler(async (req, res) => {
     const columnName = req.query.colname;
     const connection = await mysql.createConnection(db.config);
     await connection.execute(`UPDATE cols SET colname = "${columnName}" WHERE idx = ${idx}`);
+    await connection.end();
+    res.redirect("/");
+}));
+router.get("/editfilecol/:id", checkLogin, asyncHandler(async (req, res) => {
+    const idx = req.params.id;
+    const columnName = req.query.colname;
+    const connection = await mysql.createConnection(db.config);
+    await connection.execute(`UPDATE files SET name = "${columnName}" WHERE id = ${idx}`);
     await connection.end();
     res.redirect("/");
 }));

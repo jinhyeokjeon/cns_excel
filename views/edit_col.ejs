@@ -28,7 +28,14 @@
           </div>
         </th>
         <% }; %>
-        <th>첨부파일</th>
+        <% for(let i = 0; i < fileColNames.length; ++i) { %>
+        <th>
+          <%= fileColNames[i] %>
+          <div class="admin-post-controls">
+            <button class="btn" style="padding: 10px" onclick="editFileColumn('<%= i + 1 %>', '<%= fileColNames[i] %>')">열 이름 변경</button>
+          </div>
+        </th>
+        <% } %>
       </tr>
     </thead>
   </table>
@@ -54,7 +61,7 @@
   }
 
   function editColumn(index, colName) {
-    let columnName = '';
+    let columnName = "";
     while (!columnName) {
       columnName = prompt("열 이름을 입력해주세요:", colName);
       console.log(columnName);
@@ -65,6 +72,20 @@
       }
     }
     const url = `/editcol/${index}?colname=${encodeURIComponent(columnName.trim())}`;
+    window.location.href = url;
+  }
+
+  function editFileColumn(index, colName) {
+    let fileColumnName = "";
+    while (!fileColumnName) {
+      fileColumnName = prompt("열 이름을 입력해주세요:", colName);
+      if (fileColumnName === null) return;
+      if (!fileColumnName.trim()) {
+        alert("열 이름은 비워둘 수 없습니다.");
+        fileColumnName = "";
+      }
+    }
+    const url = `/editfilecol/${index}?colname=${encodeURIComponent(fileColumnName.trim())}`;
     window.location.href = url;
   }
 </script>
