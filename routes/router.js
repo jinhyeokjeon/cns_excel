@@ -14,7 +14,11 @@ const upload = multer({
     storage: multer.diskStorage({
         destination(req, file, done) {
             const id = req.params.id;
-            done(null, `./uploads/${id}/`);
+            const fileName = Buffer.from(file.originalname, 'latin1').toString('utf8');
+            if (fileName.slice(0, 2) === "1_")
+                done(null, `./uploads/${id}/1`);
+            else
+                done(null, `./uploads/${id}/2`);
         },
         filename(req, file, done) {
             // 파일 이름을 UTF-8로 변환
@@ -30,9 +34,9 @@ router.get("/", checkLogin, asyncHandler(async (req, res) => {
     const indices = await db.getIndices();
     const rows = await db.getRows();
     const ids = await db.getIds();
-    const filePaths = fctrl.getAllFilePathByIds(ids);
-    const fileNames = fctrl.getAllFileNameByIds(ids);
-    res.render("index", { colNames, indices, rows, ids, filePaths, fileNames, layout: mainLayout });
+    const filePaths1 = fctrl.getAllFilePathByIds(ids, 1);
+    const fileNames1 = fctrl.getAllFileNameByIds(ids, 1);
+    res.render("index", { colNames, indices, rows, ids, filePaths1, fileNames1, layout: mainLayout });
 }));
 router.get("/edit/:id", checkLogin, asyncHandler(async (req, res) => {
     const colNames = await db.getColNames();
@@ -72,6 +76,8 @@ const addPath = asyncHandler(async (req, res, next) => {
     await connection.end();
     const id = (maxId[0].maxId == null ? 1 : (maxId[0].maxId + 1));
     fs.mkdirSync(`./uploads/${id}/`);
+    fs.mkdirSync(`./uploads/${id}/1`);
+    fs.mkdirSync(`./uploads/${id}/2`);
     req.params.id = id;
     next();
 });

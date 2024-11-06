@@ -16,7 +16,8 @@
           <% colNames.forEach(col => { %>
           <th><%= col %></th>
           <%}); %>
-          <th>첨부파일</th>
+          <th>첨부파일1</th>
+          <th>첨부파일2</th>
         </tr>
       </thead>
 
@@ -31,6 +32,7 @@
             <td>
               <div id="upload-zone">Drag and Drop</div>
             </td>
+            <td></td>
             <td><input type="submit" id="submit-btn" value="등록" class="btn"></td>
           </tr>
           <tr>
@@ -47,18 +49,19 @@
         <% for(let j = 1; j < row.length; ++j) {%>
         <td><%= row[j] %></td>
         <% } %>
-        <td style="max-width: 300px;">
+        <td>
           <button class="toggle-btn" id="toggle-btn-<%= i %>" onclick="toggleFiles('<%= i %>')">
-            첨부파일(<%= filePaths[i].length %>) &darr;
+            첨부파일(<%= filePaths1[i].length %>) &darr;
           </button>
           <div id="file-list-<%= i %>" style="display: none;">
-            <% for(let j = 0; j < filePaths[i].length; ++j) { %>
+            <% for(let j = 0; j < filePaths1[i].length; ++j) { %>
             <div>
-              <a href="<%= filePaths[i][j] %>" download> <%= fileNames[i][j] %> </a>
+              <a href="<%= filePaths1[i][j] %>" download>첨부파일 <%=j+1%></a>
             </div>
             <% } %>
           </div>
         </td>
+        <td></td>
         <td>
           <div class="admin-post-controls">
             <a href="/edit/<%= row[0] %>" class="btn">편집</a>
@@ -74,14 +77,11 @@
   function toggleFiles(index) {
     const fileList = document.getElementById(`file-list-${index}`);
     const toggleBtn = document.getElementById(`toggle-btn-${index}`);
-    const parentTd = toggleBtn.closest("td");
 
     if (fileList.style.display === "none") {
-      parentTd.style.minWidth = "300px";
       fileList.style.display = "block";
       toggleBtn.innerHTML = `첨부파일(${fileList.children.length}) &uarr;`; // 위 화살표
     } else {
-      parentTd.style.minWidth = "unset";
       fileList.style.display = "none";
       toggleBtn.innerHTML = `첨부파일(${fileList.children.length}) &darr;`; // 아래 화살표
     }
@@ -90,7 +90,6 @@
 </script>
 
 <script>
-  const uploadZone = document.getElementById("upload-zone");
   const myDropzone = new Dropzone("#fileDropzone", {
     url: "/upload", // 실제 파일 업로드는 여기서 하지 않음
     autoProcessQueue: false, // 자동으로 서버로 전송하지 않음
@@ -123,14 +122,13 @@
       });
     }
   });
-
-  // 파일 추가 시 이름과 크기를 표시하도록 설정
   myDropzone.on("addedfile", function(file) {
     const previewElement = file.previewElement;
     previewElement.querySelector(".file-name").textContent = file.name;
     previewElement.querySelector(".file-size").textContent = `(${(file.size / 1024 / 1024).toFixed(2)} MB)`;
   });
 
+  const uploadZone = document.getElementById("upload-zone");
   const fileInput = document.createElement("input");
   fileInput.type = "file";
   fileInput.multiple = true;
@@ -139,8 +137,14 @@
   });
   fileInput.addEventListener("change", () => {
     const files = fileInput.files;
-    for (let i = 0; i < files.length; i++)
-      myDropzone.addFile(files[i]);
+    for (let i = 0; i < files.length; i++) {
+      const newFileName = "1_" + files[i].name;
+      const newFile = new File([files[i]], newFileName, {
+        type: files[i].type
+      });
+      myDropzone.addFile(newFile);
+      //myDropzone.addFile(files[i]);
+    }
     fileInput.value = ""; // 파일 선택 후 input을 초기화
   });
   uploadZone.addEventListener("mouseover", () => {
