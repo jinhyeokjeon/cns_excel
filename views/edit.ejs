@@ -90,25 +90,29 @@
         <% const row = rows[i]; %>
         <tr style="opacity: 0.4;">
           <% for(let j = 1; j < row.length; ++j) {%>
-          <% if(row[j][0] == "h") {%>
+          <% if(row[j][0] == "-") {%>
           <td style="background-color: yellow;"><%= row[j].slice(1) %></td>
           <% } else {%>
           <td><%= row[j] %></td>
           <% } %>
           <% } %>
           <td>
-            <button class="toggle-btn" id="toggle-btn1-<%= i %>" onclick="toggleFiles('<%= i %>', 1)">
-              첨부파일(<%= filePaths1[i].length %>) &darr;
-            </button>
+            <% for(let j = 0; j < filePaths1[i].length; ++j) { %>
+            <div>
+              <span>첨부파일 <%=j+1%></a>
+            </div>
+            <% } %>
           </td>
           <td>
-            <button class="toggle-btn" id="toggle-btn2-<%= i %>" onclick="toggleFiles('<%= i %>', 2)">
-              첨부파일(<%= filePaths2[i].length %>) &darr;
-            </button>
+            <% for(let j = 0; j < filePaths2[i].length; ++j) { %>
+            <div>
+              <span>첨부파일 <%=j+1%></span>
+            </div>
+            <% } %>
           </td>
           <td>
             <div class="admin-post-controls">
-              <a href="/edit/<%= row[0] %>" class="btn">수정</a>
+              <span class="btn" style="pointer-events: none;">수정</span>
             </div>
           </td>
         </tr>

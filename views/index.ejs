@@ -47,35 +47,25 @@
         <% const row = rows[i]; %>
         <tr>
           <% for(let j = 1; j < row.length; ++j) {%>
-          <% if(row[j][0] == "h") {%>
+          <% if(row[j][0] == "-") {%>
           <td style="background-color: yellow;"><%= row[j].slice(1) %></td>
           <% } else {%>
           <td><%= row[j] %></td>
           <% } %>
           <% } %>
           <td>
-            <button class="toggle-btn" id="toggle-btn1-<%= i %>" onclick="toggleFiles('<%= i %>', 1)">
-              첨부파일(<%= filePaths1[i].length %>) &darr;
-            </button>
-            <div id="file-list1-<%= i %>" style="display: none;">
-              <% for(let j = 0; j < filePaths1[i].length; ++j) { %>
-              <div>
-                <a href="<%= filePaths1[i][j] %>" download>첨부파일 <%=j+1%></a>
-              </div>
-              <% } %>
+            <% for(let j = 0; j < filePaths1[i].length; ++j) { %>
+            <div>
+              <a href="<%= filePaths1[i][j] %>" download>첨부파일 <%=j+1%></a>
             </div>
+            <% } %>
           </td>
           <td>
-            <button class="toggle-btn" id="toggle-btn2-<%= i %>" onclick="toggleFiles('<%= i %>', 2)">
-              첨부파일(<%= filePaths2[i].length %>) &darr;
-            </button>
-            <div id="file-list2-<%= i %>" style="display: none;">
-              <% for(let j = 0; j < filePaths2[i].length; ++j) { %>
-              <div>
-                <a href="<%= filePaths2[i][j] %>" download>첨부파일 <%=j+1%></a>
-              </div>
-              <% } %>
+            <% for(let j = 0; j < filePaths2[i].length; ++j) { %>
+            <div>
+              <a href="<%= filePaths2[i][j] %>" download>첨부파일 <%=j+1%></a>
             </div>
+            <% } %>
           </td>
           <td>
             <div class="admin-post-controls">
@@ -88,22 +78,6 @@
     </table>
   </div>
 </main>
-
-<script>
-  function toggleFiles(index, ith) {
-    const fileList = document.getElementById(`file-list${ith}-${index}`);
-    const toggleBtn = document.getElementById(`toggle-btn${ith}-${index}`);
-
-    if (fileList.style.display === "none") {
-      fileList.style.display = "block";
-      toggleBtn.innerHTML = `첨부파일(${fileList.children.length}) &uarr;`; // 위 화살표
-    } else {
-      fileList.style.display = "none";
-      toggleBtn.innerHTML = `첨부파일(${fileList.children.length}) &darr;`; // 아래 화살표
-    }
-    console.log(`minWidth: ${parentTd.style.minWidth}, display: ${fileList.style.display}`);
-  }
-</script>
 
 <script>
   const myDropzone = new Dropzone("#fileDropzone", {
