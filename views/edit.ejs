@@ -55,7 +55,7 @@
             <td><input type="submit" id="submit-btn" value="등록" class="btn"></td>
           </tr>
           <tr>
-            <td colspan="<%= indices.length + 1 %>">
+            <td colspan="<%= indices.length + 2 %>">
               <% if(fileNames1.length > 0) { %>
               <div style="text-align: left;">
                 <b>[<%= fileColNames[0] %>]</b>
@@ -82,6 +82,7 @@
               </div>
               <div id="fileDropzone" class="dropzone fileList" style="text-align: left;"></div>
             </td>
+            <td><a href="/delete/<%= id %>" class="btn-delete btn" onclick="return confirmDelete();">삭제</a></td>
           </tr>
         </form>
         <% continue; %>
@@ -210,12 +211,6 @@
   }
 
   document.getElementById("myForm").addEventListener("submit", function(e) {
-    let check = confirm("등록하시겠습니까?");
-    if (!check) {
-      e.preventDefault();
-      return;
-    }
-
     document.getElementById("loading-spinner").style.display = "block";
     document.getElementById("submit-btn").disabled = true;
 
@@ -238,9 +233,5 @@
 <script>
   function confirmDelete() {
     return confirm("정말 삭제하시겠습니까?");
-  }
-
-  function confirmRegist() {
-    return confirm("등록하시겠습니까?");
   }
 </script>
