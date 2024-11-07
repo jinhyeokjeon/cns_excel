@@ -19,7 +19,6 @@ table th {
   border-bottom: 1px solid #aaa;
   border-right: 1px solid #aaa;
   background-clip: padding-box;
-  scroll-snap-align: start;
 }
 
 table td {
