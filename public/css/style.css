@@ -19,6 +19,7 @@ body {
 
 a {
   color: var(--black);
+  text-decoration: none;
 }
 
 input[type="text"],
