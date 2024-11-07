@@ -116,6 +116,7 @@ router.get("/addcol/:id", checkLogin, asyncHandler(async (req, res) => {
     await connection.execute(`INSERT INTO cols VALUES (null, "${columnName}")`);
     const [rows, _] = await connection.execute("SELECT MAX(idx) as idx from cols");
     await connection.execute(`ALTER TABLE bidding ADD COLUMN _${rows[0].idx} TEXT AFTER ${idx}`);
+    await connection.execute(`INSERT INTO width VALUES (${rows[0].idx}, 100)`);
     await connection.end();
     res.redirect("/");
 }));
@@ -148,6 +149,7 @@ router.delete("/deletecol/:id", checkLogin, asyncHandler(async (req, res) => {
     const connection = await mysql.createConnection(db.config);
     await connection.execute(`DELETE FROM cols WHERE idx = ${id}`);
     await connection.execute(`ALTER TABLE bidding DROP COLUMN _${id}`);
+    await connection.execute(`DELETE FROM width WHERE id = ${id}`);
     const [maxIdx, _] = await connection.execute("SELECT MAX(idx) as idx from cols");
     let incr = maxIdx[0].idx;
     if (incr == null) incr = 1;
