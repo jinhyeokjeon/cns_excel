@@ -14,7 +14,7 @@
         <tr>
           <% for(let i = 0; i < colNames.length; ++i) { %>
           <% let col = colNames[i]; %>
-          <th style="width: <%= widths[i] %>px;"> <%= col %></th>
+          <th style="min-width: <%= widths[i] %>px;"> <%= col %></th>
           <%}; %>
           <% for(let i = 0; i < fileColNames.length; ++i) { %>
           <th><%= fileColNames[i] %></th>
