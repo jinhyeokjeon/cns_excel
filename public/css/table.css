@@ -50,7 +50,7 @@ thead {
 
 th,
 td {
-  min-width: 50px;
+  /*max-width: 200px;*/
   text-align: center;
   word-break: break-all;
   margin: 0;
