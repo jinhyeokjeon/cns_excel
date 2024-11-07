@@ -19,6 +19,9 @@ body {
 
 a {
   color: var(--black);
+}
+
+.nounderline {
   text-decoration: none;
 }
 
