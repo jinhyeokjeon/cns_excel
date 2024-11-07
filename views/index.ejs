@@ -10,7 +10,7 @@
 <main>
   <div role="region" aria-label="data table" tabindex="0" class="primary table-wrapper">
     <table style="margin-bottom: 15px;">
-      <thead>
+      <thead class="sticky">
         <tr>
           <% colNames.forEach(col => { %>
           <th><%= col %></th>
@@ -22,20 +22,20 @@
         <form id="myForm" action="/add" method="POST" enctype="multipart/form-data">
           <tr>
             <% for(let i = 0; i < indices.length; ++i) { %>
-            <td style="padding: 0 3px;">
+            <td style="padding: 0 3px;" class="bgcolor">
               <input type="text" name="<%= i %>" style="margin: auto">
             </td>
             <% } %>
-            <td>
+            <td class="bgcolor">
               <div class="upload-zone">파일 업로드</div>
             </td>
-            <td>
+            <td class="bgcolor">
               <div class="upload-zone">파일 업로드</div>
             </td>
             <td><input type="submit" id="submit-btn" value="등록" class="btn"></td>
           </tr>
           <tr>
-            <td colspan="<%= indices.length + 1 %>">
+            <td colspan="<%= indices.length + 2 %>">
               <div id="fileDropzone" class="dropzone fileList" style="text-align: left;"></div>
             </td>
           </tr>
