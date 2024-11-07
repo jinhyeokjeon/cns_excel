@@ -24,7 +24,7 @@
           <tr>
             <% for(let i = 0; i < indices.length; ++i) { %>
             <td style="padding: 0 3px;" class="bgcolor">
-              <input type="text" name="<%= i %>" style="margin: auto">
+              <input type="text" name="<%= i %>" style="margin: auto" class="moveable">
             </td>
             <% } %>
             <td class="bgcolor">
@@ -79,6 +79,26 @@
     </table>
   </div>
 </main>
+
+<script>
+  const inputs = document.querySelectorAll('.moveable');
+
+  inputs.forEach(input => {
+    input.addEventListener('keydown', function(event) {
+      // 화살표 오른쪽
+      if (event.key === 'ArrowRight') {
+        const nextInput = input.parentElement.nextElementSibling?.querySelector('input');
+        if (nextInput) nextInput.focus();
+      }
+
+      // 화살표 왼쪽
+      if (event.key === 'ArrowLeft') {
+        const prevInput = input.parentElement.previousElementSibling?.querySelector('input');
+        if (prevInput) prevInput.focus();
+      }
+    });
+  });
+</script>
 
 <script>
   const myDropzone = new Dropzone("#fileDropzone", {
