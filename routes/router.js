@@ -37,7 +37,8 @@ router.get("/", checkLogin, asyncHandler(async (req, res) => {
     const filePaths1 = fctrl.getAllFilePathByIds(ids, 1);
     const filePaths2 = fctrl.getAllFilePathByIds(ids, 2);
     const fileColNames = await db.getFileColNames();
-    res.render("index", { colNames, indices, rows, filePaths1, filePaths2, fileColNames, layout: mainLayout });
+    const widths = await db.getWidths();
+    res.render("index", { colNames, indices, rows, filePaths1, filePaths2, fileColNames, widths, layout: mainLayout });
 }));
 router.get("/edit/:id", checkLogin, asyncHandler(async (req, res) => {
     const colNames = await db.getColNames();
@@ -50,7 +51,8 @@ router.get("/edit/:id", checkLogin, asyncHandler(async (req, res) => {
     const fileColNames = await db.getFileColNames();
     const fileNames1 = fctrl.getAllFileNameById(id, 1);
     const fileNames2 = fctrl.getAllFileNameById(id, 2);
-    res.render("edit", { colNames, indices, rows, id, filePaths1, filePaths2, fileNames1, fileNames2, fileColNames, layout: mainLayout });
+    const widths = await db.getWidths();
+    res.render("edit", { colNames, indices, rows, id, filePaths1, filePaths2, fileNames1, fileNames2, fileColNames, widths, layout: mainLayout });
 }));
 router.put("/edit/:id", checkLogin, upload.array("files"), asyncHandler(async (req, res) => {
     const _indices = await db.get_Indices();
@@ -103,7 +105,8 @@ router.get("/editcol", checkLogin, asyncHandler(async (req, res) => {
     const colNames = await db.getColNames();
     const indices = await db.getIndices();
     const fileColNames = await db.getFileColNames();
-    res.render("edit_col", { colNames, indices, fileColNames, layout: mainLayout });
+    const widths = await db.getWidths();
+    res.render("edit_col", { colNames, indices, fileColNames, widths, layout: mainLayout });
 }));
 router.get("/addcol/:id", checkLogin, asyncHandler(async (req, res) => {
     let idx = req.params.id;
@@ -121,6 +124,14 @@ router.get("/editcol/:id", checkLogin, asyncHandler(async (req, res) => {
     const columnName = req.query.colname;
     const connection = await mysql.createConnection(db.config);
     await connection.execute(`UPDATE cols SET colname = "${columnName}" WHERE idx = ${idx}`);
+    await connection.end();
+    res.redirect("/");
+}));
+router.get("/editwidth/:id", checkLogin, asyncHandler(async (req, res) => {
+    const idx = req.params.id;
+    const width = req.query.width;
+    const connection = await mysql.createConnection(db.config);
+    await connection.execute(`UPDATE width SET w = ${width} WHERE id = ${idx}`);
     await connection.end();
     res.redirect("/");
 }));

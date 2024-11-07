@@ -73,4 +73,16 @@ const getFileColNames = async () => {
     return ret;
 }
 
-module.exports = { config, getIndices, get_Indices, getColNames, getRows, getRow, getIds, getFileColNames };
+const getWidths = async () => {
+    const indices = await getIndices();
+    const connection = await mysql.createConnection(config);
+    let widths = new Array();
+    for (let i = 0; i < indices.length; ++i) {
+        const [rows, _] = await connection.execute(`SELECT w FROM width WHERE id = ${indices[i]}`);
+        widths.push(rows[0].w);
+    }
+    await connection.end();
+    return widths;
+}
+
+module.exports = { config, getIndices, get_Indices, getColNames, getRows, getRow, getIds, getFileColNames, getWidths };

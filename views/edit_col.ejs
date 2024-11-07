@@ -7,14 +7,17 @@
   <table style="margin-bottom: 15px;">
     <thead>
       <tr>
-        <th class="column-add">
+        <th class="column-add" style="border-left: 0;">
           <div class="admin-post-controls">
             <button class="btn" onclick="addColumn('id')">열 추가</button>
           </div>
         </th>
         <% for(let i = 0; i < colNames.length; ++i){ %>
-        <th>
+        <th style="border-left: 1px solid #aaa;">
           <%= colNames[i] %>
+          <div class="admin-post-controls">
+            <button class="btn" style="padding: 10px" onclick="editColWidth('<%= indices[i] %>', '<%= widths[i] %>')">열 너비 변경</button>
+          </div>
           <div class="admin-post-controls">
             <button class="btn" style="padding: 10px" onclick="editColumn('<%= indices[i] %>', '<%= colNames[i] %>')">열 이름 변경</button>
           </div>
@@ -29,7 +32,7 @@
         </th>
         <% }; %>
         <% for(let i = 0; i < fileColNames.length; ++i) { %>
-        <th>
+        <th style="border-left: 1px solid #aaa;">
           <%= fileColNames[i] %>
           <div class="admin-post-controls">
             <button class="btn" style="padding: 10px" onclick="editFileColumn('<%= i + 1 %>', '<%= fileColNames[i] %>')">열 이름 변경</button>
@@ -60,11 +63,28 @@
     window.location.href = url;
   }
 
+  function editColWidth(index, width) {
+    let colWidth = "";
+    while (!colWidth) {
+      colWidth = parseInt(prompt("열 너비를 입력해주세요:", width));
+      if (colWidth === null) return;
+      if (colWidth < 50) {
+        alert("너비는 최소 50 이상이어야 합니다.");
+        colWidth = "";
+      }
+      if (isNaN(colWidth)) {
+        alert("정수만 입력 가능합니다.");
+        colWidth = "";
+      }
+    }
+    const url = `/editwidth/${index}?width=${encodeURIComponent(colWidth)}`;
+    window.location.href = url;
+  }
+
   function editColumn(index, colName) {
     let columnName = "";
     while (!columnName) {
       columnName = prompt("열 이름을 입력해주세요:", colName);
-      console.log(columnName);
       if (columnName === null) return;
       if (!columnName.trim()) {
         alert("열 이름은 비워둘 수 없습니다.");
