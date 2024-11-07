@@ -66,8 +66,9 @@
   function editColWidth(index, width) {
     let colWidth = "";
     while (!colWidth) {
-      colWidth = parseInt(prompt("열 너비를 입력해주세요:", width));
+      colWidth = prompt("열 너비를 입력해주세요:", width);
       if (colWidth === null) return;
+      colWidth = parseInt(colWidth);
       if (colWidth < 50) {
         alert("너비는 최소 50 이상이어야 합니다.");
         colWidth = "";
