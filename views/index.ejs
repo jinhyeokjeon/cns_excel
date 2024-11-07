@@ -9,17 +9,17 @@
 
 <main>
   <div role="region" aria-label="data table" tabindex="0" class="primary table-wrapper">
-    <table style="margin-bottom: 15px;">
-      <thead>
-        <tr>
-          <% colNames.forEach(col => { %>
-          <th><%= col %></th>
-          <%}); %>
-          <% for(let i = 0; i < fileColNames.length; ++i) { %>
-          <th><%= fileColNames[i] %></th>
-          <% } %>
-        </tr>
-        <form id="myForm" action="/add" method="POST" enctype="multipart/form-data">
+    <form id="myForm" action="/add" method="POST" enctype="multipart/form-data">
+      <table style="margin-bottom: 15px;">
+        <thead>
+          <tr>
+            <% colNames.forEach(col => { %>
+            <th><%= col %></th>
+            <%}); %>
+            <% for(let i = 0; i < fileColNames.length; ++i) { %>
+            <th><%= fileColNames[i] %></th>
+            <% } %>
+          </tr>
           <tr>
             <% for(let i = 0; i < indices.length; ++i) { %>
             <td style="padding: 0 3px;">
@@ -39,43 +39,43 @@
               <div id="fileDropzone" class="dropzone fileList" style="text-align: left;"></div>
             </td>
           </tr>
-        </form>
-      </thead>
-      <div id="loading-spinner" class="loading-spinner">파일을 업로드 중입니다... 절대 끄지 마세요</div>
-      <tbody>
-        <% for(let i = 0; i < rows.length; ++i) { %>
-        <% const row = rows[i]; %>
-        <tr>
-          <% for(let j = 1; j < row.length; ++j) {%>
-          <% if(row[j][0] == "-") {%>
-          <td style="background-color: yellow;"><%= row[j].slice(1) %></td>
-          <% } else {%>
-          <td><%= row[j] %></td>
-          <% } %>
-          <% } %>
-          <td>
-            <% for(let j = 0; j < filePaths1[i].length; ++j) { %>
-            <div>
-              <a href="<%= filePaths1[i][j] %>" download>첨부파일 <%=j+1%></a>
-            </div>
+        </thead>
+        <div id="loading-spinner" class="loading-spinner">파일을 업로드 중입니다... 절대 끄지 마세요</div>
+        <tbody>
+          <% for(let i = 0; i < rows.length; ++i) { %>
+          <% const row = rows[i]; %>
+          <tr>
+            <% for(let j = 1; j < row.length; ++j) {%>
+            <% if(row[j][0] == "-") {%>
+            <td style="background-color: yellow;"><%= row[j].slice(1) %></td>
+            <% } else {%>
+            <td><%= row[j] %></td>
             <% } %>
-          </td>
-          <td>
-            <% for(let j = 0; j < filePaths2[i].length; ++j) { %>
-            <div>
-              <a href="<%= filePaths2[i][j] %>" download>첨부파일 <%=j+1%></a>
-            </div>
             <% } %>
-          </td>
-          <td>
-            <div class="admin-post-controls">
-              <a href="/edit/<%= row[0] %>" class="btn">수정</a>
-            </div>
-          </td>
-        </tr>
-        <% }; %>
-      </tbody>
-    </table>
+            <td>
+              <% for(let j = 0; j < filePaths1[i].length; ++j) { %>
+              <div>
+                <a href="<%= filePaths1[i][j] %>" download>첨부파일 <%=j+1%></a>
+              </div>
+              <% } %>
+            </td>
+            <td>
+              <% for(let j = 0; j < filePaths2[i].length; ++j) { %>
+              <div>
+                <a href="<%= filePaths2[i][j] %>" download>첨부파일 <%=j+1%></a>
+              </div>
+              <% } %>
+            </td>
+            <td>
+              <div class="admin-post-controls">
+                <a href="/edit/<%= row[0] %>" class="btn">수정</a>
+              </div>
+            </td>
+          </tr>
+          <% }; %>
+        </tbody>
+      </table>
+    </form>
   </div>
 </main>
 
