@@ -47,7 +47,7 @@
         <% const row = rows[i]; %>
         <tr>
           <% for(let j = 1; j < row.length; ++j) {%>
-          <% if(row[j][0] == "-") {%>
+          <% if(row[j] != null && row[j][0] == "-") {%>
           <td style="background-color: yellow;"><%= row[j].slice(1) %></td>
           <% } else {%>
           <td><%= row[j] %></td>
