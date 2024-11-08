@@ -67,6 +67,7 @@ const getIds = async () => {
 const getFileColNames = async () => {
     const connection = await mysql.createConnection(config);
     const [rows, _] = await connection.execute("SELECT name FROM files");
+    await connection.end();
     let ret = new Array();
     for (let i = 0; i < rows.length; ++i)
         ret.push(rows[i].name);
