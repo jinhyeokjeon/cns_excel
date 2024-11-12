@@ -84,9 +84,18 @@ const addPath = asyncHandler(async (req, res, next) => {
     const [maxId, _] = await connection.execute("SELECT MAX(id) as maxId from bidding");
     await connection.end();
     const id = (maxId[0].maxId == null ? 1 : (maxId[0].maxId + 1));
-    fs.mkdirSync(`./uploads/${id}/`);
-    fs.mkdirSync(`./uploads/${id}/1`);
-    fs.mkdirSync(`./uploads/${id}/2`);
+    try {
+        fs.mkdirSync(`./uploads/${id}/`);
+        fs.mkdirSync(`./uploads/${id}/1`);
+        fs.mkdirSync(`./uploads/${id}/2`);
+    } catch (err) {
+        if (err.code === 'EEXIST') {
+            fs.rmSync(`./uploads/${id}`, { recursive: true });
+            fs.mkdirSync(`./uploads/${id}/`);
+            fs.mkdirSync(`./uploads/${id}/1`);
+            fs.mkdirSync(`./uploads/${id}/2`);
+        }
+    }
     req.params.id = id;
     next();
 });

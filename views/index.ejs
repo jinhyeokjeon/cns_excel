@@ -42,7 +42,10 @@
           </tr>
         </form>
       </thead>
-      <div id="loading-spinner" class="loading-spinner">파일을 업로드 중입니다... 절대 끄지 마세요</div>
+      <div id="loading-spinner" class="loading-spinner">
+        <div>&nbsp;&nbsp;파일 업로드 중</div>
+        <img src="img/progress.gif">
+      </div>
       <tbody>
         <% for(let i = 0; i < rows.length; ++i) { %>
         <% const row = rows[i]; %>
