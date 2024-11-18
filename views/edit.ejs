@@ -16,22 +16,20 @@
           <% let col = colNames[i]; %>
           <th style="min-width: <%= widths[i] %>px; max-width: <%= widths[i] %>px; width: <%= widths[i] %>px;"> <%= col %></th>
           <%} %>
-          <% for(let i = 0; i < fileColNames.length; ++i) { %>
-          <th><%= fileColNames[i] %></th>
-          <% } %>
         </tr>
         <tr style="opacity: 0.4;">
           <% for(let i = 0; i < indices.length; ++i) { %>
-          <td style="padding: 0 3px;">
-            <input type="text" name="<%= i %>" style="margin: auto">
+          <% if(isText[i] == 1) { %>
+          <td style="padding: 0 3px;" class="bgcolor">
+            <input type="text" name="<%= i %>" style="margin: auto" class="moveable">
+          </td>
+          <% } else {%>
+          <td class="bgcolor">
+            <div>파일 업로드</div>
+            <input type="hidden" name="<%= i %>" value="$file_col">
           </td>
           <% } %>
-          <td>
-            <div class="upload-zone">파일 업로드</div>
-          </td>
-          <td>
-            <div class="upload-zone">파일 업로드</div>
-          </td>
+          <% } %>
           <td><input type="submit" id="submit-btn" value="등록" class="btn" style="pointer-events: none;"></td>
         </tr>
         <tr>
@@ -43,41 +41,31 @@
         <form id="myForm" action="/edit/<%= id %>?_method=PUT" method="POST" enctype="multipart/form-data">
           <tr>
             <% for(let j = 0; j < indices.length; ++j) { %>
-            <td style="padding: 0 3px;">
-              <input type="text" value="<%= rows[i][j + 1] %>" name="<%= i %>" style="margin: auto" class="moveable">
+            <% if(isText[j] == 1) { %>
+            <td style="padding: 0 3px;" class="bgcolor">
+              <input type="text" name="<%= j %>" value="<%= rows[i][j + 1] %>" style="margin: auto" class="moveable">
+            </td>
+            <% } else {%>
+            <td class="bgcolor">
+              <div class="upload-zone">파일 업로드</div>
+              <input type="hidden" name="<%= j %>" value="$file_col">
             </td>
             <% } %>
-            <td>
-              <div class="upload-zone">파일 업로드</div>
-            </td>
-            <td>
-              <div class="upload-zone">파일 업로드</div>
-            </td>
+            <% } %>
             <td><input type="submit" id="submit-btn" value="등록" class="btn"></td>
           </tr>
           <tr>
-            <td colspan="<%= indices.length + 2 %>" style="height: 50px;">
-              <% if(fileNames1.length > 0) { %>
+            <td colspan="<%= indices.length %>" style="height: 50px;">
+              <% for(let j = 0; j < fileNames.length; ++j) { %>
               <div style="text-align: left;">
-                <b>[<%= fileColNames[0] %>]</b>
+                <b>[<%= fileColNames[j] %>]</b>
+              </div>
+              <% for(let k = 0; k < fileNames[j].length; ++k) { %>
+              <div style="text-align: left;">
+                <%= fileNames[j][k] %>
+                <a href="/deletefile/<%= fileCols[j] %>/<%= id %>?fileName=<%= encodeURIComponent(fileNames[j][k]) %>" onclick="return confirmDelete();">&times</a>
               </div>
               <% } %>
-              <% for(let j = 0; j < fileNames1.length; ++j) { %>
-              <div style="text-align: left;">
-                <%= fileNames1[j] %>
-                <a href="/deletefile/1/<%= id %>?fileName=<%= encodeURIComponent(fileNames1[j]) %>" onclick="return confirmDelete();">&times</a>
-              </div>
-              <% } %>
-              <% if(fileNames2.length > 0) { %>
-              <div style="text-align: left;">
-                <b>[<%= fileColNames[1] %>]</b>
-              </div>
-              <% } %>
-              <% for(let j = 0; j < fileNames2.length; ++j) { %>
-              <div style="text-align: left;">
-                <%= fileNames2[j] %>
-                <a href="/deletefile/2/<%= id %>?fileName=<%= encodeURIComponent(fileNames2[j]) %>" onclick="return confirmDelete();">&times</a>
-              </div>
               <% } %>
               <div style="text-align: left;">
               </div>
@@ -88,33 +76,26 @@
         </form>
         <% continue; %>
         <% } %>
-        <div id="loading-spinner" class="loading-spinner">
-          <div>&nbsp;&nbsp;파일 업로드 중</div>
-          <img src="../img/progress.gif">
-        </div>
+
         <% const row = rows[i]; %>
+        <% let f = 0; %>
         <tr style="opacity: 0.4;">
           <% for(let j = 1; j < row.length; ++j) {%>
-          <% if(row[j] != null && row[j][0] == "-") {%>
+          <% if(row[j] == "$file_col") {%>
+          <td>
+            <% for(let j = 0; j < filePaths[f][i].length; ++j) { %>
+            <div>
+              <span>첨부파일 <%= j+1 %></span>
+            </div>
+            <% } %>
+            <% ++f; %>
+          </td>
+          <% } else if(row[j] != null && row[j][0] == "-") {%>
           <td style="background-color: yellow;"><%= row[j].slice(1) %></td>
           <% } else {%>
           <td><%= row[j] %></td>
           <% } %>
           <% } %>
-          <td>
-            <% for(let j = 0; j < filePaths1[i].length; ++j) { %>
-            <div>
-              <span>첨부파일 <%=j+1%></span>
-            </div>
-            <% } %>
-          </td>
-          <td>
-            <% for(let j = 0; j < filePaths2[i].length; ++j) { %>
-            <div>
-              <span>첨부파일 <%=j+1%></span>
-            </div>
-            <% } %>
-          </td>
           <td>
             <div class="admin-post-controls">
               <span class="btn" style="pointer-events: none;">수정</span>
@@ -122,6 +103,10 @@
           </td>
         </tr>
         <% }; %>
+        <div id="loading-spinner" class="loading-spinner">
+          <div>&nbsp;&nbsp;파일 업로드 중</div>
+          <img src="../img/progress.gif">
+        </div>
       </tbody>
     </table>
   </div>
@@ -186,8 +171,10 @@
     previewElement.querySelector(".file-size").textContent = `(${(file.size / 1024 / 1024).toFixed(2)} MB)`;
   });
 
-  let uploadZone = Array.from(document.querySelectorAll(".upload-zone")).slice(2);
-  const fileInput = [document.createElement("input"), document.createElement("input")];
+  const uploadZone = document.querySelectorAll(".upload-zone");
+  let fileInput = new Array();
+  for (let i = 0; i < uploadZone.length; ++i)
+    fileInput.push(document.createElement("input"));
   for (let i = 0; i < fileInput.length; ++i) {
     fileInput[i].type = "file";
     fileInput[i].multiple = true;
@@ -196,10 +183,11 @@
     uploadZone[i].addEventListener("click", () => {
       fileInput[i].click();
     });
+    const f = <%- JSON.stringify(fileCols) %>;
     fileInput[i].addEventListener("change", () => {
       const files = fileInput[i].files;
       for (let j = 0; j < files.length; j++) {
-        const newFileName = `${i+1}_` + files[j].name;
+        const newFileName = `${f[i]}_` + files[j].name;
         const newFile = new File([files[j]], newFileName, {
           type: files[j].type
         });
@@ -225,7 +213,7 @@
       uploadZone[i].style.borderColor = '#aaa';
       const files = e.dataTransfer.files;
       for (let j = 0; j < files.length; j++) {
-        const newFileName = `${i+1}_` + files[j].name;
+        const newFileName = `${f[i]}_` + files[j].name;
         const newFile = new File([files[j]], newFileName, {
           type: files[j].type
         });

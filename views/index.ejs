@@ -16,23 +16,21 @@
           <% let col = colNames[i]; %>
           <th style="min-width: <%= widths[i] %>px; max-width: <%= widths[i] %>px; width: <%= widths[i] %>px;"> <%= col %></th>
           <%}; %>
-          <% for(let i = 0; i < fileColNames.length; ++i) { %>
-          <th><%= fileColNames[i] %></th>
-          <% } %>
         </tr>
         <form id="myForm" action="/add" method="POST" enctype="multipart/form-data">
           <tr>
             <% for(let i = 0; i < indices.length; ++i) { %>
+            <% if(isText[i] == 1) { %>
             <td style="padding: 0 3px;" class="bgcolor">
               <input type="text" name="<%= i %>" style="margin: auto" class="moveable">
             </td>
+            <% } else {%>
+            <td class="bgcolor">
+              <div class="upload-zone">파일 업로드</div>
+              <input type="hidden" name="<%= i %>" value="$file_col">
+            </td>
             <% } %>
-            <td class="bgcolor">
-              <div class="upload-zone">파일 업로드</div>
-            </td>
-            <td class="bgcolor">
-              <div class="upload-zone">파일 업로드</div>
-            </td>
+            <% } %>
             <td><input type="submit" id="submit-btn" value="등록" class="btn"></td>
           </tr>
           <tr>
@@ -49,28 +47,24 @@
       <tbody>
         <% for(let i = 0; i < rows.length; ++i) { %>
         <% const row = rows[i]; %>
+        <% let f = 0; %>
         <tr>
           <% for(let j = 1; j < row.length; ++j) {%>
-          <% if(row[j] != null && row[j][0] == "-") {%>
+          <% if(row[j] == "$file_col") {%>
+          <td>
+            <% for(let j = 0; j < filePaths[f][i].length; ++j) { %>
+            <div>
+              <a href="<%= filePaths[f][i][j] %>" class="nounderline" download>첨부파일 <%=j+1%></a>
+            </div>
+            <% } %>
+            <% ++f; %>
+          </td>
+          <% } else if(row[j] != null && row[j][0] == "-") {%>
           <td style="background-color: yellow;"><%= row[j].slice(1) %></td>
           <% } else {%>
           <td><%= row[j] %></td>
           <% } %>
           <% } %>
-          <td>
-            <% for(let j = 0; j < filePaths1[i].length; ++j) { %>
-            <div>
-              <a href="<%= filePaths1[i][j] %>" class="nounderline" download>첨부파일 <%=j+1%></a>
-            </div>
-            <% } %>
-          </td>
-          <td>
-            <% for(let j = 0; j < filePaths2[i].length; ++j) { %>
-            <div>
-              <a href="<%= filePaths2[i][j] %>" class="nounderline" download>첨부파일 <%=j+1%></a>
-            </div>
-            <% } %>
-          </td>
           <td>
             <div class="admin-post-controls">
               <a href="/edit/<%= row[0] %>" class="btn">수정</a>
@@ -143,7 +137,9 @@
   });
 
   const uploadZone = document.querySelectorAll(".upload-zone");
-  const fileInput = [document.createElement("input"), document.createElement("input")];
+  let fileInput = new Array();
+  for (let i = 0; i < uploadZone.length; ++i)
+    fileInput.push(document.createElement("input"));
   for (let i = 0; i < fileInput.length; ++i) {
     fileInput[i].type = "file";
     fileInput[i].multiple = true;
@@ -152,10 +148,11 @@
     uploadZone[i].addEventListener("click", () => {
       fileInput[i].click();
     });
+    const f = <%- JSON.stringify(fileCols) %>;
     fileInput[i].addEventListener("change", () => {
       const files = fileInput[i].files;
       for (let j = 0; j < files.length; j++) {
-        const newFileName = `${i+1}_` + files[j].name;
+        const newFileName = `${f[i]}_` + files[j].name;
         const newFile = new File([files[j]], newFileName, {
           type: files[j].type
         });
@@ -181,7 +178,7 @@
       uploadZone[i].style.borderColor = '#aaa';
       const files = e.dataTransfer.files;
       for (let j = 0; j < files.length; j++) {
-        const newFileName = `${i+1}_` + files[j].name;
+        const newFileName = `${f[i]}_` + files[j].name;
         const newFile = new File([files[j]], newFileName, {
           type: files[j].type
         });

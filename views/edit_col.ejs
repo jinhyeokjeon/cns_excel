@@ -3,13 +3,16 @@
   <h2>열 편집</h2>
 </div>
 
-<div class="table-wrapper">
+<div class="table-wrapper" style="width: 100%; height: 200px; overflow:auto;">
   <table style="margin-bottom: 15px;">
     <thead>
       <tr>
         <th class="column-add" style="border-left: 0;">
           <div class="admin-post-controls">
-            <button class="btn" onclick="addColumn('id')">열 추가</button>
+            <button class="btn" onclick="addColumn('id', '1')">텍스트 열</button>
+          </div>
+          <div class="admin-post-controls">
+            <button class="btn" onclick="addColumn('id', '0')">첨부파일 열</button>
           </div>
         </th>
         <% for(let i = 0; i < colNames.length; ++i){ %>
@@ -21,26 +24,22 @@
           <div class="admin-post-controls">
             <button class="btn" style="padding: 10px" onclick="editColumn('<%= indices[i] %>', '<%= colNames[i] %>')">열 이름 변경</button>
           </div>
-          <form action="/deletecol/<%= indices[i] %>?_method=DELETE" method="POST" onsubmit="return confirmDelete();">
+          <form action="/deletecol/<%= indices[i] %>/<%= isText[i] %>/?_method=DELETE" method="POST" onsubmit="return confirmDelete();">
             <input type="submit" value="열 삭제" class="btn-delete btn">
           </form>
         </th>
         <th class="column-add">
           <div class="admin-post-controls">
-            <button class="btn" onclick="addColumn('<%= indices[i] %>')">열 추가</button>
+            <button class="btn" onclick="addColumn('<%= indices[i] %>', '1')">텍스트 열</button>
+          </div>
+          <div class="admin-post-controls">
+            <button class="btn" onclick="addColumn('<%= indices[i] %>', '0')">첨부파일 열</button>
           </div>
         </th>
         <% }; %>
-        <% for(let i = 0; i < fileColNames.length; ++i) { %>
-        <th style="border-left: 1px solid #aaa;">
-          <%= fileColNames[i] %>
-          <div class="admin-post-controls">
-            <button class="btn" style="padding: 10px" onclick="editFileColumn('<%= i + 1 %>', '<%= fileColNames[i] %>')">열 이름 변경</button>
-          </div>
-        </th>
-        <% } %>
       </tr>
     </thead>
+    <tbody></tbody>
   </table>
 </div>
 
@@ -49,7 +48,7 @@
     return confirm("정말 삭제하시겠습니까?");
   }
 
-  function addColumn(index) {
+  function addColumn(index, isText) {
     let columnName = '';
     while (!columnName) {
       columnName = prompt("열 이름을 입력해주세요:");
@@ -59,7 +58,7 @@
         columnName = "";
       }
     }
-    const url = `/addcol/${index}?colname=${encodeURIComponent(columnName.trim())}`;
+    const url = `/addcol/${index}/${isText}/?colname=${encodeURIComponent(columnName.trim())}`;
     window.location.href = url;
   }
 
@@ -93,20 +92,6 @@
       }
     }
     const url = `/editcol/${index}?colname=${encodeURIComponent(columnName.trim())}`;
-    window.location.href = url;
-  }
-
-  function editFileColumn(index, colName) {
-    let fileColumnName = "";
-    while (!fileColumnName) {
-      fileColumnName = prompt("열 이름을 입력해주세요:", colName);
-      if (fileColumnName === null) return;
-      if (!fileColumnName.trim()) {
-        alert("열 이름은 비워둘 수 없습니다.");
-        fileColumnName = "";
-      }
-    }
-    const url = `/editfilecol/${index}?colname=${encodeURIComponent(fileColumnName.trim())}`;
     window.location.href = url;
   }
 </script>

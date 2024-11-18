@@ -8,11 +8,11 @@ const methodOverride = require("method-override");
 const app = express();
 const port = 3000;
 
+app.set("view engine", "ejs");
+app.set("views", "./views");
 app.use(expressLayouts);
 app.use(express.static("public"));
 app.use(express.static("uploads"));
-app.set("view engine", "ejs");
-app.set("views", "./views");
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
