@@ -94,3 +94,8 @@ thead.sticky {
   position: sticky !important;
   top: 0px !important;
 }
+
+tr.sticky {
+  position: sticky !important;
+  top: 0px !important;
+}

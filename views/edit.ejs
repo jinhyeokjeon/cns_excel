@@ -11,20 +11,20 @@
   <div role="region" aria-label="data table" tabindex="0" class="primary table-wrapper">
     <table style="margin-bottom: 15px;">
       <thead>
-        <tr>
+        <tr class="sticky" style="z-index: 9999;">
           <% for(let i = 0; i < colNames.length; ++i) { %>
           <% let col = colNames[i]; %>
-          <th style="min-width: <%= widths[i] %>px; max-width: <%= widths[i] %>px; width: <%= widths[i] %>px;"> <%= col %></th>
+          <th style=" min-width: <%= widths[i] %>px; max-width: <%= widths[i] %>px; width: <%= widths[i] %>px;"> <%= col %></th>
           <%} %>
         </tr>
-        <tr style="opacity: 0.4;">
+        <tr>
           <% for(let i = 0; i < indices.length; ++i) { %>
           <% if(isText[i] == 1) { %>
-          <td style="padding: 0 3px;" class="bgcolor">
-            <input type="text" name="<%= i %>" style="margin: auto" class="moveable">
+          <td style="padding: 0 3px; opacity: 0.4;" class="bgcolor">
+            <input type="text" name="<%= i %>" style="margin: auto" class="moveable" readonly>
           </td>
           <% } else {%>
-          <td class="bgcolor">
+          <td class="bgcolor" style="opacity: 0.4;">
             <div>파일 업로드</div>
             <input type="hidden" name="<%= i %>" value="$file_col">
           </td>
