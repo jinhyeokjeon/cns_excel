@@ -16,6 +16,7 @@
           <% let col = colNames[i]; %>
           <th style="min-width: <%= widths[i] %>px; max-width: <%= widths[i] %>px; width: <%= widths[i] %>px;"> <%= col %></th>
           <%}; %>
+          <th class="bgcolor" style="border: 0"></th>
         </tr>
         <form id="myForm" action="/add" method="POST" enctype="multipart/form-data">
           <tr>
@@ -31,7 +32,7 @@
             </td>
             <% } %>
             <% } %>
-            <td><input type="submit" id="submit-btn" value="등록" class="btn"></td>
+            <td class="bgcolor"><input type="submit" id="submit-btn" value="등록" class="btn"></td>
           </tr>
           <tr>
             <td colspan="<%= indices.length + 2 %>">

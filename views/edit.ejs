@@ -11,7 +11,7 @@
   <div role="region" aria-label="data table" tabindex="0" class="primary table-wrapper">
     <table style="margin-bottom: 15px;">
       <thead>
-        <tr class="sticky" style="z-index: 9999;">
+        <tr>
           <% for(let i = 0; i < colNames.length; ++i) { %>
           <% let col = colNames[i]; %>
           <th style=" min-width: <%= widths[i] %>px; max-width: <%= widths[i] %>px; width: <%= widths[i] %>px;"> <%= col %></th>
@@ -38,6 +38,12 @@
       <tbody>
         <% for(let i = 0; i < rows.length; ++i) { %>
         <% if(rows[i][0] == id) {%>
+        <tr>
+          <% for(let j = 0; j < colNames.length; ++j) { %>
+          <% let col = colNames[j]; %>
+          <th style=" min-width: <%= widths[j] %>px; max-width: <%= widths[j] %>px; width: <%= widths[j] %>px;"> <%= col %></th>
+          <%} %>
+        </tr>
         <form id="myForm" action="/edit/<%= id %>?_method=PUT" method="POST" enctype="multipart/form-data">
           <tr>
             <% for(let j = 0; j < indices.length; ++j) { %>
