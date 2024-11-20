@@ -68,7 +68,7 @@
           <% } %>
           <td>
             <div class="admin-post-controls">
-              <a href="/edit/<%= row[0] %>" class="btn">수정</a>
+              <a href="/edit/<%= row[0] %>" class="btn" onclick="saveScrollPosition()">수정</a>
             </div>
           </td>
         </tr>
@@ -77,6 +77,24 @@
     </table>
   </div>
 </main>
+
+<script>
+  window.onload = function() {
+    // 세션 스토리지에서 저장된 스크롤 위치 가져오기
+    const scrollY = sessionStorage.getItem("scrollY");
+    const t = document.getElementsByClassName("table-wrapper")[0];
+    if (scrollY) {
+      // 해당 위치로 스크롤
+      t.scrollTop = scrollY;
+    }
+  };
+
+  function saveScrollPosition() {
+    // 현재 스크롤 위치를 세션 스토리지에 저장
+    const scrollY = document.getElementsByClassName("table-wrapper")[0].scrollTop;
+    sessionStorage.setItem('scrollY', scrollY);
+  }
+</script>
 
 <script>
   const inputs = document.querySelectorAll('.moveable');
