@@ -21,7 +21,7 @@
           <% for(let i = 0; i < indices.length; ++i) { %>
           <% if(isText[i] == 1) { %>
           <td style="padding: 0 3px; opacity: 0.4;" class="bgcolor">
-            <input type="text" name="<%= i %>" style="margin: auto" class="moveable" readonly>
+            <input type="text" name="<%= i %>" style="margin: auto" readonly>
           </td>
           <% } else {%>
           <td class="bgcolor" style="opacity: 0.4;">
@@ -138,22 +138,31 @@
 
 <script>
   const inputs = document.querySelectorAll('.moveable');
-
-  inputs.forEach(input => {
+  for (let i = 0; i < inputs.length; ++i) {
+    const input = inputs[i];
     input.addEventListener('keydown', function(event) {
+      const cursorPosition = input.selectionStart;
+      const inputLength = input.value.length;
       // 화살표 오른쪽
       if (event.key === 'ArrowRight') {
-        const nextInput = input.parentElement.nextElementSibling?.querySelector('input');
-        if (nextInput) nextInput.focus();
+        // 커서가 맨 오른쪽에 있을 때만 다음 input으로 포커스를 이동
+        if (cursorPosition === inputLength) {
+          if (i < inputs.length - 1) { // i + 1 번째 input으로 이동
+            inputs[i + 1].focus();
+          }
+        }
       }
-
       // 화살표 왼쪽
       if (event.key === 'ArrowLeft') {
-        const prevInput = input.parentElement.previousElementSibling?.querySelector('input');
-        if (prevInput) prevInput.focus();
+        // 커서가 맨 왼쪽에 있을 때만 이전 input으로 포커스를 이동
+        if (cursorPosition === 0) {
+          if (i >= 1) { // i - 1 번째 input으로 이동
+            inputs[i - 1].focus();
+          }
+        }
       }
     });
-  });
+  }
 </script>
 
 <script>
