@@ -106,7 +106,8 @@
       // 화살표 오른쪽
       if (event.key === 'ArrowRight') {
         // 커서가 맨 오른쪽에 있을 때만 다음 input으로 포커스를 이동
-        if (cursorPosition === inputLength) {
+        if (cursorPosition === inputLength && event.isComposing === false) {
+          event.preventDefault();
           if (i < inputs.length - 1) { // i + 1 번째 input으로 이동
             inputs[i + 1].focus();
           }
@@ -115,7 +116,8 @@
       // 화살표 왼쪽
       if (event.key === 'ArrowLeft') {
         // 커서가 맨 왼쪽에 있을 때만 이전 input으로 포커스를 이동
-        if (cursorPosition === 0) {
+        if (cursorPosition === 0 && event.isComposing === false) {
+          event.preventDefault();
           if (i >= 1) { // i - 1 번째 input으로 이동
             inputs[i - 1].focus();
           }
