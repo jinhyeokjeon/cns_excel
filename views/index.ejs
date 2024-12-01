@@ -62,9 +62,9 @@
             <% ++f; %>
           </td>
           <% } else if(row[j] != null && row[j][0] == "-") {%>
-          <td style="background-color: yellow; white-space: pre-line;"> <%= row[j].slice(1) %><br> </td>
+          <td style="background-color: yellow; white-space: pre-line;" class="cell"> <%= row[j].slice(1) %><br> </td>
           <% } else {%>
-          <td style="white-space: pre-line;"> <%= row[j] %> </td>
+          <td style="white-space: pre-line;" class="cell"> <%= row[j] %> </td>
           <% } %>
           <% } %>
           <td>
@@ -78,6 +78,23 @@
     </table>
   </div>
 </main>
+
+<script>
+  const cells = document.getElementsByClassName("cell");
+  for (let i = 0; i < cells.length; ++i) {
+    const cell = cells[i];
+    const content = cell.innerHTML;
+
+    // 정규식을 사용해 URL 찾기
+    const linkedContent = content.replace(
+      /(https?:\/\/\S+)/g,
+      '<a href="$1" target="_blank">$1</a>'
+    );
+
+    // 변환된 내용을 다시 삽입
+    cell.innerHTML = linkedContent;
+  }
+</script>
 
 <script>
   window.onload = function() {
