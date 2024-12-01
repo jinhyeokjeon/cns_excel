@@ -23,7 +23,8 @@
             <% for(let i = 0; i < indices.length; ++i) { %>
             <% if(isText[i] == 1) { %>
             <td style="padding: 0 3px;" class="bgcolor">
-              <input type="text" name="<%= i %>" style="margin: auto" class="moveable">
+              <textarea rows="2" name="<%= i %>" style="margin: auto" class="moveable"></textarea>
+              <!--<input type="text" name="<%= i %>" style="margin: auto" class="moveable">-->
             </td>
             <% } else {%>
             <td class="bgcolor">
@@ -61,9 +62,9 @@
             <% ++f; %>
           </td>
           <% } else if(row[j] != null && row[j][0] == "-") {%>
-          <td style="background-color: yellow;"><%= row[j].slice(1) %></td>
+          <td style="background-color: yellow; white-space: pre-line;"> <%= row[j].slice(1) %><br> </td>
           <% } else {%>
-          <td><%= row[j] %></td>
+          <td style="white-space: pre-line;"> <%= row[j] %> </td>
           <% } %>
           <% } %>
           <td>
